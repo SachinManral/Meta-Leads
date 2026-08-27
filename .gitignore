@@ -13,7 +13,8 @@ mobile/.env
 mobile/.env.*
 !mobile/.env.example
 
-# Video Recordings & Large Media (Loom recordings, screen captures)
+# Video Recordings & Large Media (Loom recordings, screen captures, executables)
+*.exe
 *.mp4
 *.mov
 *.avi
