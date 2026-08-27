@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Meta Leads Live",
+    "slug": "meta-leads-live",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
