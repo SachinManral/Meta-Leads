@@ -22,6 +22,7 @@ mobile/.env.*
 *.webm
 *.loom
 *.gif
+LOOM_VIDEO_SCRIPTS.md
 recordings/
 videos/
 screencasts/

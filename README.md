@@ -239,17 +239,6 @@ The script generates an authentic `X-Hub-Signature-256` HMAC header using your `
 
 ---
 
-## 🎥 Deliverables & Video Recording Kit
-
-Complete step-by-step teleprompter scripts with timestamp action cues are available in **[`LOOM_VIDEO_SCRIPTS.md`](./LOOM_VIDEO_SCRIPTS.md)**:
-
-- 🎬 **Video 1: Live Product Demo (< 5 min)**:
-  Screen setup, lead submission via testing tool, zero-touch arrival, 4-stage delivery trace, speed-to-lead status tracker, and mobile action dialers.
-- 🎬 **Video 2: Architecture & Code Walkthrough (5–7 min)**:
-  Deep dive into HMAC-SHA256 signature verification, Graph API normalization, Socket.IO broadcast, duplicate protection, and React Native render optimizations.
-
----
-
 ## 📁 Repository Structure
 
 ```
@@ -259,7 +248,6 @@ Complete step-by-step teleprompter scripts with timestamp action cues are availa
 ├── PRD.md                     # Product Requirements Document
 ├── BRD.md                     # Business Requirements Document
 ├── ASSUMPTIONS.md             # Technical Assumptions & Token Scopes
-├── LOOM_VIDEO_SCRIPTS.md      # Word-for-Word Loom Presentation Scripts
 ├── backend/                   # Node.js + Express + Socket.IO Server
 │   ├── .env.example           # Environment template (safe for git)
 │   ├── scripts/
