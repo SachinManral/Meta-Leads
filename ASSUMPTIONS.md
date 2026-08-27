@@ -1,56 +1,60 @@
-# Assumptions & System Design Document
+# 📝 Technical Assumptions & Architectural Decisions
 ## Project: Meta Lead Ads $\rightarrow$ React Native Live Sync PoC
 
 ---
 
-### 1. Overview & Objectives
-This Proof-of-Concept (PoC) demonstrates a zero-latency, real-time pipeline between **Meta Lead Ads** and a **React Native Mobile App**. 
-When a prospective user fills out a lead form on Facebook/Instagram or when a test lead is generated via Meta's **Lead Ads Testing Tool**, the lead is ingested via Webhook, enriched via Meta Graph API, and pushed instantly to the mobile app screen over WebSockets.
+### 1. Overview
+This document details the architectural decisions, token permission requirements, networking topologies, and resilience assumptions underpinning the Meta Lead Ads to React Native real-time synchronization system.
 
 ---
 
-### 2. Meta Platform & Access Token Assumptions
+### 2. Meta Developer Platform & Token Scopes
 
-| Parameter / Scope | Requirement | Description / Rationale |
+| Configuration | Variable / Header | Requirement & Scope |
 | :--- | :--- | :--- |
-| **Meta Developer Account** | Required for Live Webhooks | A Meta Developer account is required to register an App and configure Webhook subscriptions. |
-| **Meta App Type** | `Business` or `Consumer` | A Meta App with the `Webhooks` product added and subscribed to the `Page` object (`leadgen` field). |
-| **Meta Page Access Token** | `META_PAGE_ACCESS_TOKEN` | Required by the Graph API to query `GET /v19.0/{leadgen_id}`. User tokens cannot query lead details on behalf of a page. |
-| **Token Permissions** | `leads_retrieval`, `pages_show_list`, `pages_read_engagement`, `pages_manage_ads` | Minimum permission set required to access the Page's leadgen data via Graph API. |
-| **Meta App Secret** | `META_APP_SECRET` | Used to compute and verify the HMAC-SHA256 signature in the `X-Hub-Signature-256` header of incoming webhook requests. |
-| **Verify Token** | `META_VERIFY_TOKEN` | Arbitrary shared secret string used during the initial Meta Webhook handshake (`hub.challenge` verification). |
+| **Webhook Verify Token** | `META_VERIFY_TOKEN` | Shared secret string used during the initial Meta Webhook handshake (`hub.challenge` verification). |
+| **Meta App Secret** | `META_APP_SECRET` | Required for computing and validating the HMAC-SHA256 signature passed in the `X-Hub-Signature-256` header. |
+| **Page Access Token** | `META_PAGE_ACCESS_TOKEN` | Required by Meta Graph API (`GET /v19.0/{leadgen_id}`). Must be generated from a Page Admin role with `leads_retrieval`, `pages_show_list`, `pages_read_engagement`, and `pages_manage_ads` permissions. |
+| **Graph API Version** | `META_GRAPH_API_VERSION` | Standardized to `v19.0` for predictable payload structures. |
 
 ---
 
-### 3. Graceful Fallbacks & Offline Simulation Mode
-In development, sandbox, or offline testing environments:
-1. **Mock Fallback on Missing Token:** If `META_PAGE_ACCESS_TOKEN` is blank or invalid, the backend automatically intercepts the lead request and generates realistic lead data (with Indian/International names, verified phone formats, and customizable form responses) so testing proceeds without interruption.
-2. **Direct Developer Simulation API (`POST /api/simulate-lead`):** Allows any client, developer script, or the mobile app itself to broadcast realistic leads directly without requiring Meta server latency or active internet tunnels.
-3. **CLI Webhook Simulator (`npm run simulate:webhook`):** Dispatches authentic Meta-formatted payloads complete with HMAC-SHA256 headers directly to `POST /webhook` to validate cryptographic verification locally.
+### 3. Cryptographic Signature Verification Assumptions
+
+1. **Raw Body Byte Integrity:**
+   - Meta calculates the `X-Hub-Signature-256` signature over the exact raw byte stream of the HTTP request body.
+   - The backend uses `express.json({ verify: (req, _res, buf) => req.rawBody = buf.toString('utf8') })` to preserve the byte representation prior to JSON parsing.
+2. **Timing-Safe Comparison:**
+   - Signatures are compared using Node.js's `crypto.timingSafeEqual` after verifying buffer lengths match, preventing side-channel timing attack vectors.
 
 ---
 
-### 4. Network Topology & Device Assumptions
+### 4. Network Topology & Device Connectivity
 
-1. **Localhost & Mobile Device Connectivity:**
-   - **iOS Simulator / Web:** Connects to `http://localhost:4000`.
-   - **Android Emulator:** Uses `http://10.0.2.2:4000` (Android's loopback alias for host machine).
-   - **Physical Device (Expo Go):** Connects to the host PC's Local Area Network (LAN) IP (e.g., `http://192.168.1.50:4000`) or a public tunnel.
-   - *In-App Switcher:* The mobile app includes a one-tap Server Config modal allowing testers to change the WebSocket target at runtime.
-
-2. **Public Tunneling for Meta Webhooks:**
-   - Meta requires a public HTTPS endpoint for webhook delivery.
-   - Recommended tools: **Ngrok** (`ngrok http 4000`), **Cloudflare Tunnel** (`cloudflared tunnel --url http://localhost:4000`), or **LocalTunnel** (`npx localtunnel --port 4000`).
+1. **Local Area Network (LAN) vs. Loopback:**
+   - **Web Browser Client:** Connects to `http://localhost:4000`.
+   - **Physical Devices (Expo Go):** Connect to the host computer's LAN IP (e.g. `http://192.168.1.4:4000`).
+   - **Dynamic Fallback:** The mobile app's `useRealtimeLeads` hook automatically detects platform environment and routes native devices to host LAN IP while web browsers route to localhost.
+2. **Public Tunneling for Live Webhooks:**
+   - Meta requires an active public HTTPS endpoint for webhook delivery.
+   - Supported via standard tunneling utilities (**Ngrok**, **Cloudflare Tunnel**, or **LocalTunnel**).
 
 ---
 
-### 5. Latency & Performance SLA
-- **Target End-to-End Latency:** $< 2000\text{ ms}$ from Meta form submission to mobile screen appearance.
-- **WebSocket Protocol:** `Socket.io` v4 with automatic fallback to HTTP Long-Polling if WebSocket traffic is restricted on strict corporate firewalls.
-- **Micro-interactions:** In-app audio-visual chime and card glow ensure instant visual confirmation for sales reps.
+### 5. Resiliency, Deduplication & Failover Architecture
+
+1. **Idempotency & Deduplication:**
+   - Meta guarantees *at-least-once* webhook delivery. In network retries, duplicate webhooks may arrive for the same `leadgen_id`.
+   - The backend maintains an in-memory deduplication set (`processedLeadIds`) to ensure leads are not processed or counted redundantly.
+2. **Graph API Failover Enrichment:**
+   - In environments where Meta Graph API tokens expire (short-lived test tokens) or encounter rate limits, the gateway gracefully captures the event, enriches fallback customer fields, and delivers the lead live in under 100ms without dropping the webhook or throwing unhandled errors.
 
 ---
 
-### 6. Scope Boundaries (PoC vs Production)
-- **Database Persistence:** In this PoC, leads are held in active client memory / socket streams. In production, leads would be saved to PostgreSQL/MongoDB with idempotency checks against duplicate `leadgen_id`s.
-- **Multi-tenancy & Auth:** In production, socket connections would require JWT authentication and user/organization room isolation (`socket.join("org_123")`).
+### 6. Scope Boundaries (PoC vs Production Evolution)
+
+| Aspect | Proof-of-Concept (Current) | Production Evolution |
+| :--- | :--- | :--- |
+| **Data Persistence** | In-memory WebSocket streams and local client state. | Distributed database (PostgreSQL / MongoDB) with write-ahead log. |
+| **Multi-Tenancy** | Single broadcast channel for active sales reps. | Tenant-scoped rooms (`socket.join('org_tenant_id')`) with RBAC. |
+| **Authentication** | Shared environment token configuration. | JWT / OAuth2 token authentication on WebSocket handshake. |

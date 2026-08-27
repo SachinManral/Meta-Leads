@@ -1,10 +1,18 @@
-# Product Requirements Document (PRD)
+# 📋 Product Requirements Document (PRD)
 ## Project: Meta Lead Ads $\rightarrow$ React Native Live Sync PoC
 
 ---
 
 ## 1. Product Overview
-The system captures lead generation events from Meta Lead Ads via Webhook, fetches complete lead details via Meta Graph API, and instantly broadcasts them to a connected React Native app over WebSockets (`Socket.io`). The lead displays dynamically on the active mobile screen with zero user interaction.
+
+The **Meta Lead Ads Real-Time Gateway & Mobile Client** provides a seamless, zero-touch bridge between customer form submissions on Meta platforms (Facebook / Instagram) and sales representatives using a mobile application.
+
+```
+┌────────────────────────┐      ┌────────────────────────┐      ┌────────────────────────┐      ┌────────────────────────┐
+│  Meta Lead Ads / Tool  │ ───> │  Ngrok / HTTPS Tunnel  │ ───> │  Node.js + Socket.IO   │ ───> │  React Native Client   │
+│   (Form Submission)    │      │      (Webhook POST)    │      │   (Backend Gateway)    │      │      (Live Feed)       │
+└────────────────────────┘      └────────────────────────┘      └────────────────────────┘      └────────────────────────┘
+```
 
 ---
 
@@ -13,96 +21,109 @@ The system captures lead generation events from Meta Lead Ads via Webhook, fetch
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as Tester (Meta Lead Testing Tool)
-    participant Meta as Meta Graph API & Webhook
-    participant Tunnel as Ngrok / Public Tunnel
-    participant Backend as Node.js / Express + Socket.io Server
-    participant App as React Native Mobile App
+    actor Customer as Inbound Lead / Tester
+    participant Meta as Meta Graph API & Webhooks
+    participant Tunnel as HTTPS Tunnel (Ngrok)
+    participant Backend as Node.js + Express + Socket.IO
+    participant Mobile as React Native Mobile App
 
-    Note over App,Backend: App opens & establishes WebSocket connection
-    App->>Backend: Connect WebSocket (socket.io)
-    Backend-->>App: Connection Confirmed (status: "Online")
+    Note over Mobile,Backend: 1. Real-Time Connection
+    Mobile->>Backend: Establish WebSocket Connection (Socket.IO)
+    Backend-->>Mobile: Connection Confirmed (Status: "● LIVE")
 
-    User->>Meta: Click "Create Lead" in Meta Lead Testing Tool
+    Note over Customer,Meta: 2. Lead Generation
+    Customer->>Meta: Submit Lead Form (Ad Form or Testing Tool)
     Meta->>Tunnel: POST /webhook (event: leadgen, leadgen_id, page_id)
-    Tunnel->>Backend: Forward POST /webhook payload
-    Backend->>Backend: Verify Signature (X-Hub-Signature-256)
-    Backend-->>Tunnel: Return HTTP 200 OK
+    Tunnel->>Backend: Forward HTTPS POST with X-Hub-Signature-256
+
+    Note over Backend: 3. Security & Validation
+    Backend->>Backend: HMAC-SHA256 crypto.timingSafeEqual validation
+    Backend-->>Tunnel: HTTP 200 OK ("EVENT_RECEIVED")
+
+    Note over Backend,Meta: 4. Lead Data Normalization
     Backend->>Meta: GET https://graph.facebook.com/v19.0/{leadgen_id}?access_token={PAGE_TOKEN}
-    Meta-->>Backend: Return Lead JSON (field_data: full_name, email, phone, custom fields)
-    Backend->>Backend: Parse & Format Lead Payload
-    Backend->>App: socket.emit("new_lead", formattedLead)
-    App->>App: Trigger In-App Highlight Animation + Append to Top of List
-    Note over App: Lead appears on screen live without user touch!
+    Meta-->>Backend: Lead Details JSON (standard + custom fields)
+    Backend->>Backend: Normalize into FormattedLead Schema + Calculate Latency
+
+    Note over Backend,Mobile: 5. Sub-100ms Live Broadcast
+    Backend->>Mobile: socket.emit("new_lead", FormattedLead)
+    Mobile->>Mobile: Trigger 4-Stage Delivery Trace + Top Arrival Toast
+    Note over Mobile: Lead displays dynamically without any user touch!
 ```
 
 ---
 
-## 3. Key Functional Modules
+## 3. Core Functional Modules
 
-### Module 1: Webhook Ingestion & Graph API Gateway (Backend)
-- **Endpoint `GET /webhook`:** 
-  - Challenge verification (`hub.mode === 'subscribe'` & `hub.verify_token === VERIFY_TOKEN`).
+### Module 1: Webhook Ingestion & Graph API Gateway (`backend/`)
+- **`GET /webhook` (Handshake Verification):**
+  - Validates `hub.mode === 'subscribe'` and `hub.verify_token === META_VERIFY_TOKEN`.
   - Returns `hub.challenge` with `200 OK`.
-- **Endpoint `POST /webhook`:**
-  - Validates `x-hub-signature-256` using HMAC SHA256 with Meta App Secret.
-  - Extracts `leadgen_id` and `page_id` from `entry[].changes[].value`.
-  - Queries Graph API `GET /{leadgen_id}` with `PAGE_ACCESS_TOKEN`.
-  - Emits normalized JSON payload to connected socket room.
-- **Endpoint `POST /api/simulate-lead` (Mock / Fallback mode):**
-  - Allows instant local testing without needing active Meta credentials.
+- **`POST /webhook` (Event Ingestion):**
+  - Validates raw payload against `X-Hub-Signature-256` header using `crypto.timingSafeEqual`.
+  - Extracts `leadgen_id`, checks in-memory deduplication set, and records start timestamp.
+  - Queries Meta Graph API (`GET /v19.0/{leadgen_id}`) using `META_PAGE_ACCESS_TOKEN`.
+  - Normalizes dynamic fields (Name, Email, Phone, Company, Custom Questions) and broadcasts via WebSockets.
+- **Failover & Developer Simulation (`POST /api/simulate-lead` & `simulate_webhook.ts`):**
+  - Enables local testing with authentic HMAC verification and diverse profile cycling.
 
-### Module 2: Real-time Communication Layer (Socket.io)
-- WebSocket server with heartbeat & auto-reconnection events (`connect`, `disconnect`, `reconnect`).
-- Broadcast event `new_lead` with structure:
+### Module 2: WebSocket Real-Time Layer (`Socket.IO`)
+- Bidirectional transport with auto-reconnection and heartbeat monitoring.
+- Emits structured events:
+  - `new_lead`: Broadcasts full lead payload with millisecond telemetry.
+  - `lead_status_updated`: Synchronizes status changes across connected devices.
+  - `system_activity`: Emits real-time backend pipeline logs to mobile activity stream.
+
+### Module 3: React Native Mobile Client (`mobile/`)
+- **Live Feed Interface:**
+  - Dynamic `FlatList` with `React.memo` optimization maintaining 60 FPS under load.
+  - Animated 4-stage **Delivery Trace** (`Meta Event` $\rightarrow$ `HMAC Valid` $\rightarrow$ `Graph API` $\rightarrow$ `Delivered Live`).
+  - **Live Arrival Toast Banner** (`LiveToastAlert.tsx`) sliding down smoothly on inbound leads.
+- **Speed-to-Lead Response Tracker:**
+  - Interactive status workflow: `New Lead` $\rightarrow$ `Contacted` $\rightarrow$ `Qualified` $\rightarrow$ `Closed`.
+  - Automatically calculates and timestamps first-contact response speed.
+- **Quick Action Bar & Detail Sheet:**
+  - One-tap triggers for **Call**, **SMS**, and **Email**.
+  - Internal sales notes editor with instant save.
+  - Deep-dive Technical Inspector displaying HMAC proof, latency breakdown, and raw Graph API JSON.
+
+---
+
+## 4. Normalized Data Model
+
 ```json
 {
-  "id": "1234567890",
-  "leadgen_id": "4567891230",
-  "created_time": "2026-08-27T08:30:00Z",
-  "full_name": "Sachin Sharma",
-  "email": "sachin.lead@example.com",
-  "phone_number": "+91 9876543210",
-  "platform": "fb",
-  "form_name": "Summer Special Consultation",
+  "id": "lead_1787852558057",
+  "leadgen_id": "10293847561234",
+  "created_time": "2026-08-27T17:45:00.000Z",
+  "full_name": "Rohan Mehta",
+  "email": "rohan.mehta@example.com",
+  "phone_number": "+91 9840550427",
+  "city": "Bengaluru",
+  "company_name": "Nova Cloud Systems",
+  "form_name": "Enterprise Inbound Lead Form",
   "custom_fields": {
-    "preferred_time": "Evening (6 PM - 8 PM)",
-    "budget": "$10,000"
+    "Interested Service": "Enterprise Cloud Migration",
+    "Budget Estimate": "$25,000 - $40,000",
+    "Preferred Contact Time": "Morning (9 AM - 12 PM)"
   },
-  "is_new": true
+  "status": "new",
+  "telemetry": {
+    "webhook_received_at": "2026-08-27T17:45:01.100Z",
+    "graph_api_fetched_at": "2026-08-27T17:45:01.145Z",
+    "broadcast_at": "2026-08-27T17:45:01.162Z",
+    "pipeline_latency_ms": 62,
+    "hmac_verified": true,
+    "duplicate_protected": true
+  },
+  "received_at": "2026-08-27T17:45:01.162Z"
 }
 ```
 
-### Module 3: React Native Client App (Clean Minimalist White Design)
-- **Design System:**
-  - Color palette: Clean White background (`#FFFFFF`), Soft Slate Gray borders (`#F1F5F9`), Charcoal headings (`#0F172A`), Emerald Green live indicator (`#10B981`), Indigo subtle accents (`#6366F1`).
-  - Typography: Modern, high readability sans-serif with distinct weight hierarchy.
-- **Components:**
-  1. **Header Bar:** PoC Title + Live WebSocket Status Pill (🟢 Connected / 🔴 Reconnecting) + Lead Counter.
-  2. **Lead Feed (FlatList / Animated):**
-     - Smooth entry transition when new lead arrives.
-     - "NEW" badge with subtle glow.
-     - Contact details, timestamp, platform badge, form tag.
-  3. **Lead Details Modal / Drawer:**
-     - Click on card to view complete field mapping and payload metadata.
-  4. **Direct Action Triggers:**
-     - Quick "Call", "Email", and "Copy" actions directly from the card.
-
 ---
 
-## 4. How to Shine Out (Differentiators & WOW Factors)
-To make your submission standout against other candidates:
-1. **Webhook Security (HMAC Validation):** Implement production-grade `X-Hub-Signature-256` verification so Meta webhooks are cryptographically authenticated.
-2. **Audio-Visual Micro-interactions:** Play a subtle chime sound + light haptic/flash effect when a lead pops up on screen.
-3. **Quick Action Buttons:** Directly trigger phone dialer or mail app from lead cards.
-4. **Mock Lead Generator Button (Dual Mode):** Built-in "Simulate Test Lead" button in the backend or dev menu for rapid testing even without Meta webhook latency.
-5. **Clean Architecture Separation:** Clean TypeScript structure separating API client, Socket Manager, UI hooks, and Theme tokens.
-6. **Detailed Setup Guide & Video Script:** Complete ready-to-read script for your Loom recordings.
+## 5. Security & Engineering Best Practices
 
----
-
-## 5. Agile Implementation Phases
-* **Phase 1:** Backend Setup (Express + Socket.io + Meta Webhook & Graph API Gateway + Mock Simulator)
-* **Phase 2:** React Native Mobile Client (Expo / RN + Clean White UI + Real-time Socket Listener + Animations)
-* **Phase 3:** Meta Developer App & Ngrok Tunnel Setup + Lead Testing Tool Integration
-* **Phase 4:** End-to-End Testing & Loom Video Presentation Kit (Step-by-step Script & Architecture Walkthrough)
+1. **Timing-Safe Cryptography:** Uses `crypto.timingSafeEqual` with byte-length validation on raw body byte buffers to prevent timing analysis attack vectors.
+2. **Memory Leak Protection:** All timeout and interval refs (`timersRef`) are cleared on unmount.
+3. **Graceful Process Termination:** Handlers for `SIGTERM` and `SIGINT` cleanly close HTTP and WebSocket servers without dropping active socket sessions.
