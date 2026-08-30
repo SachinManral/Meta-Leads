@@ -30,6 +30,8 @@ This Proof-of-Concept (PoC) delivers a **zero-touch, real-time lead capture pipe
    - Telemetry logging and millisecond pipeline latency tracking.
 2. **React Native Mobile Client (Expo / TypeScript):**
    - Real-time lead inbox feed with zero-touch dynamic insertion.
+   - Floating iOS frosted-glass navigation dock with original vector icons and zero text labels.
+   - Dedicated Speed-to-Lead Performance Analytics dashboard.
    - 4-Stage visual delivery trace animation confirming cryptographic verification.
    - Speed-to-lead response tracker with interactive status workflow (`New` $\rightarrow$ `Contacted` $\rightarrow$ `Qualified` $\rightarrow$ `Closed`).
    - One-tap contact triggers for Phone (`tel:`), SMS (`sms:`), and Email (`mailto:`).

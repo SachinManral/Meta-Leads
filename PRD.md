@@ -75,13 +75,17 @@ sequenceDiagram
   - `system_activity`: Emits real-time backend pipeline logs to mobile activity stream.
 
 ### Module 3: React Native Mobile Client (`mobile/`)
-- **Live Feed Interface:**
+- **Edge-to-Edge Feed & Floating iOS Frosted Dock:**
+  - Full-screen scroll extending seamlessly behind a floating glassmorphic navigation dock (`BottomTabBar.tsx`).
+  - 4 original vector icons (Inbox, Analytics, Telemetry, Settings) with **zero text labels** and spring haptic physics.
+  - Translucent blurred backdrop with soft ambient drop shadow.
   - Dynamic `FlatList` with `React.memo` optimization maintaining 60 FPS under load.
   - Animated 4-stage **Delivery Trace** (`Meta Event` $\rightarrow$ `HMAC Valid` $\rightarrow$ `Graph API` $\rightarrow$ `Delivered Live`).
   - **Live Arrival Toast Banner** (`LiveToastAlert.tsx`) sliding down smoothly on inbound leads.
-- **Speed-to-Lead Response Tracker:**
+- **Speed-to-Lead Response Tracker & Analytics View:**
   - Interactive status workflow: `New Lead` $\rightarrow$ `Contacted` $\rightarrow$ `Qualified` $\rightarrow$ `Closed`.
   - Automatically calculates and timestamps first-contact response speed.
+  - Dedicated **Performance Analytics** dashboard (`AnalyticsView.tsx`) tracking average speed-to-lead, contact rate %, and pipeline stage progress bars.
 - **Quick Action Bar & Detail Sheet:**
   - One-tap triggers for **Call**, **SMS**, and **Email**.
   - Internal sales notes editor with instant save.

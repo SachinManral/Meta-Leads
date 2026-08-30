@@ -22,7 +22,12 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
   onSelectTab,
   uncontactedBadgeCount = 0,
 }) => {
-  const tabs: { key: BottomTabKey; iconActive: keyof typeof Ionicons.glyphMap; iconInactive: keyof typeof Ionicons.glyphMap; badge?: number }[] = [
+  const tabs: {
+    key: BottomTabKey;
+    iconActive: keyof typeof Ionicons.glyphMap;
+    iconInactive: keyof typeof Ionicons.glyphMap;
+    badge?: number;
+  }[] = [
     {
       key: 'inbox',
       iconActive: 'file-tray-full',
@@ -47,8 +52,8 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({
   ];
 
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.container}>
+    <View style={styles.floatingWrapper} pointerEvents="box-none">
+      <View style={styles.floatingDock}>
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
           return (
@@ -79,14 +84,14 @@ const TabItem: React.FC<TabItemProps> = ({ icon, isActive, badge, onPress }) => 
   const handlePress = () => {
     Animated.sequence([
       Animated.timing(scaleAnim, {
-        toValue: 0.85,
-        duration: 80,
+        toValue: 0.82,
+        duration: 70,
         useNativeDriver: Platform.OS !== 'web',
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
         friction: 4,
-        tension: 80,
+        tension: 90,
         useNativeDriver: Platform.OS !== 'web',
       }),
     ]).start();
@@ -101,25 +106,23 @@ const TabItem: React.FC<TabItemProps> = ({ icon, isActive, badge, onPress }) => 
     >
       <Animated.View
         style={[
-          styles.iconContainer,
-          isActive && styles.iconContainerActive,
+          styles.iconPill,
+          isActive && styles.iconPillActive,
           { transform: [{ scale: scaleAnim }] },
         ]}
       >
         <Ionicons
           name={icon}
-          size={24}
-          color={isActive ? colors.primary : '#94A3B8'}
+          size={23}
+          color={isActive ? colors.primary : '#64748B'}
         />
 
-        {/* Small Active Glow Dot directly below the icon */}
+        {/* Small Active Dot indicator beneath icon */}
         {isActive && <View style={styles.activeDot} />}
 
-        {/* Dynamic Uncontacted Badge Count */}
+        {/* Uncontacted Badge */}
         {badge !== undefined && badge > 0 && (
-          <View style={styles.badgePill}>
-            <View style={styles.badgeInnerDot} />
-          </View>
+          <View style={styles.badgeDot} />
         )}
       </Animated.View>
     </TouchableOpacity>
@@ -127,33 +130,47 @@ const TabItem: React.FC<TabItemProps> = ({ icon, isActive, badge, onPress }) => 
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#E2E8F0',
-    paddingBottom: Platform.OS === 'ios' ? 24 : 10,
-    paddingTop: 8,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 8,
-      },
-      web: {
-        boxShadow: '0 -2px 10px rgba(0,0,0,0.04)',
-      },
-    }),
+  floatingWrapper: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: Platform.OS === 'ios' ? 26 : 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 9999,
   },
-  container: {
+  floatingDock: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingHorizontal: 20,
-    height: 48,
+    width: '90%',
+    maxWidth: 380,
+    height: 62,
+    borderRadius: 31,
+    backgroundColor: Platform.select({
+      ios: 'rgba(255, 255, 255, 0.84)',
+      android: 'rgba(255, 255, 255, 0.94)',
+      web: 'rgba(255, 255, 255, 0.88)',
+    }),
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    paddingHorizontal: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#0F172A',
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.15,
+        shadowRadius: 22,
+      },
+      android: {
+        elevation: 12,
+      },
+      web: {
+        boxShadow: '0 12px 32px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.04)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      },
+    }),
   },
   tabButton: {
     flex: 1,
@@ -161,37 +178,34 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     height: '100%',
   },
-  iconContainer: {
+  iconPill: {
     width: 48,
     height: 44,
-    borderRadius: 14,
+    borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
   },
-  iconContainerActive: {
-    backgroundColor: '#F0F7FF',
+  iconPillActive: {
+    backgroundColor: '#EFF6FF',
   },
   activeDot: {
     position: 'absolute',
-    bottom: 3,
+    bottom: 4,
     width: 4,
     height: 4,
     borderRadius: 2,
     backgroundColor: colors.primary,
   },
-  badgePill: {
+  badgeDot: {
     position: 'absolute',
-    top: 4,
-    right: 6,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    top: 6,
+    right: 8,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
     backgroundColor: '#10B981',
-    borderWidth: 1.5,
+    borderWidth: 1.2,
     borderColor: '#FFFFFF',
-  },
-  badgeInnerDot: {
-    flex: 1,
   },
 });

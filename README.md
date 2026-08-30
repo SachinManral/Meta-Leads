@@ -86,6 +86,8 @@ sequenceDiagram
 | Feature | Description |
 |---|---|
 | **⚡ Zero-Touch Ingestion** | Incoming leads appear at the top of the feed instantly via WebSockets without manual refresh or polling. |
+| **🏝️ Floating iOS Frosted Dock** | Edge-to-edge full-screen scrolling beneath a floating frosted-glass navigation dock with original vector icons and zero text clutter. |
+| **📊 Speed-to-Lead Analytics** | KPI dashboard displaying average response times, contact conversion rates, and pipeline stage breakdowns. |
 | **🚀 4-Stage Delivery Trace** | Fluid visual pipeline on new arrivals: `Meta Event` $\rightarrow$ `HMAC Verified` $\rightarrow$ `Graph API Parsed` $\rightarrow$ `Delivered Live in 54ms`. |
 | **🎯 Speed-to-Lead Tracker** | Real-time response speed tracker calculating exact seconds from arrival to first sales contact. |
 | **🔔 Floating Live Arrival Toast** | Top slide-down banner (`LiveToastAlert.tsx`) alerting sales reps of new inbound leads with one-tap inspection. |
