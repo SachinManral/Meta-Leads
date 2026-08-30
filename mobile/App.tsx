@@ -14,11 +14,11 @@ import { Header } from './src/components/Header';
 import { LeadCard } from './src/components/LeadCard';
 import { LeadDetailModal } from './src/components/LeadDetailModal';
 import { ServerConfigModal } from './src/components/ServerConfigModal';
-import { SystemActivityDrawer } from './src/components/SystemActivityDrawer';
 import { LiveToastAlert } from './src/components/LiveToastAlert';
 import { EmptyState } from './src/components/EmptyState';
 import { BottomTabBar, BottomTabKey } from './src/components/BottomTabBar';
 import { AnalyticsView } from './src/components/AnalyticsView';
+import { ActivityLogView } from './src/components/ActivityLogView';
 import { Lead, LeadStatus } from './src/types/lead';
 
 export default function App() {
@@ -42,7 +42,6 @@ export default function App() {
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [serverModalVisible, setServerModalVisible] = useState(false);
-  const [activityDrawerExpanded, setActivityDrawerExpanded] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
 
   const uncontactedCount = leads.filter((l) => l.status === 'new').length;
@@ -92,9 +91,6 @@ export default function App() {
   const handleSelectTab = (tab: BottomTabKey) => {
     if (tab === 'settings') {
       setServerModalVisible(true);
-    } else if (tab === 'activity') {
-      setActiveTab('inbox');
-      setActivityDrawerExpanded((prev) => !prev);
     } else {
       setActiveTab(tab);
     }
@@ -111,10 +107,15 @@ export default function App() {
           onDismiss={dismissLatestLead}
         />
 
-        {/* Dynamic Content: Inbox vs Analytics */}
+        {/* Dynamic Content Views */}
         {activeTab === 'analytics' ? (
           <AnalyticsView
             leads={leads}
+            onBackToInbox={() => setActiveTab('inbox')}
+          />
+        ) : activeTab === 'grid' ? (
+          <ActivityLogView
+            activities={activities}
             onBackToInbox={() => setActiveTab('inbox')}
           />
         ) : (
@@ -149,17 +150,10 @@ export default function App() {
                 <EmptyState appMode={appMode} onSimulate={handleSimulate} />
               }
             />
-
-            {/* Collapsible System Activity Log Stream */}
-            <SystemActivityDrawer
-              activities={activities}
-              isExpanded={activityDrawerExpanded}
-              onToggleExpanded={() => setActivityDrawerExpanded((prev) => !prev)}
-            />
           </>
         )}
 
-        {/* Sleek iOS Bottom Tab Bar (Only original vector icons, no text labels) */}
+        {/* High-End Floating iOS Dark Capsule Dock (Matching Reference Image) */}
         <BottomTabBar
           activeTab={activeTab}
           onSelectTab={handleSelectTab}
@@ -201,7 +195,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingTop: 8,
-    paddingBottom: 110,
+    paddingBottom: 110, // Generous breathing room so cards scroll completely above the floating dock
     flexGrow: 1,
   },
 });
