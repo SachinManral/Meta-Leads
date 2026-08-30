@@ -28,6 +28,7 @@ export interface Lead {
   received_at: string;
   isNew?: boolean;
   showTrace?: boolean;
+  notes?: string;
 }
 
 export interface SystemActivityLog {

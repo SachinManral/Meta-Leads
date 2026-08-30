@@ -62,6 +62,7 @@ export interface FormattedLead {
   telemetry: LeadTelemetry;
   raw_data?: any;
   received_at: string;
+  notes?: string;
 }
 
 export interface SystemActivityLog {

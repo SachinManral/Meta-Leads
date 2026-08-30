@@ -8,6 +8,7 @@ import {
   Animated,
   Platform,
 } from 'react-native';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
 import { ConnectionStatus, AppMode } from '../types/lead';
 
@@ -95,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
       <View style={styles.topRow}>
         <View style={styles.brandRow}>
           <View style={styles.metaIconBadge}>
-            <Text style={styles.metaIconText}>∞</Text>
+            <Ionicons name="logo-facebook" size={17} color="#FFFFFF" />
           </View>
           <View>
             <Text style={styles.appTitle}>Meta Leads Inbox</Text>
@@ -109,8 +110,13 @@ export const Header: React.FC<HeaderProps> = ({
             onPress={onToggleAppMode}
             activeOpacity={0.7}
           >
+            <Ionicons
+              name={appMode === 'demo' ? 'sparkles' : 'code-slash'}
+              size={12}
+              color="#475569"
+            />
             <Text style={styles.modeBadgeText}>
-              {appMode === 'demo' ? '🎯 Demo Mode' : '🛠️ Dev Mode'}
+              {appMode === 'demo' ? 'Demo Mode' : 'Dev Mode'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -137,7 +143,7 @@ export const Header: React.FC<HeaderProps> = ({
           </View>
         </View>
 
-        <Text style={styles.configChevron}>⚙️</Text>
+        <Ionicons name="settings-sharp" size={14} color={conn.textColor} />
       </TouchableOpacity>
 
       {/* Stats and Operational Action Bar */}
@@ -166,6 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
         <View style={styles.controlsGroup}>
           {totalLeads > 0 && (
             <TouchableOpacity style={styles.clearBtn} onPress={onClear} activeOpacity={0.7}>
+              <Feather name="trash-2" size={12} color="#64748B" />
               <Text style={styles.clearBtnText}>Clear</Text>
             </TouchableOpacity>
           )}
@@ -180,7 +187,10 @@ export const Header: React.FC<HeaderProps> = ({
               {isSimulating ? (
                 <ActivityIndicator size="small" color="#FFFFFF" />
               ) : (
-                <Text style={styles.simulateBtnText}>+ Simulate</Text>
+                <>
+                  <Ionicons name="add" size={14} color="#FFFFFF" />
+                  <Text style={styles.simulateBtnText}>Simulate</Text>
+                </>
               )}
             </TouchableOpacity>
           )}
@@ -194,17 +204,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.surface,
     paddingHorizontal: 16,
-    paddingTop: 14,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#E2E8F0',
-    ...shadows.sm,
   },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   brandRow: {
     flexDirection: 'row',
@@ -214,22 +223,17 @@ const styles = StyleSheet.create({
   metaIconBadge: {
     width: 32,
     height: 32,
-    borderRadius: 9,
+    borderRadius: 10,
     backgroundColor: '#1877F2',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  metaIconText: {
-    color: '#FFFFFF',
-    fontSize: 20,
-    fontWeight: '900',
-    marginTop: -3,
+    ...shadows.sm,
   },
   appTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '800',
     color: colors.textPrimary,
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
   },
   subtitle: {
     fontSize: 12,
@@ -242,9 +246,12 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   modeBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
     paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 14,
+    paddingVertical: 5,
+    borderRadius: 12,
     backgroundColor: '#F1F5F9',
     borderWidth: 1,
     borderColor: '#E2E8F0',
@@ -252,7 +259,7 @@ const styles = StyleSheet.create({
   modeBadgeText: {
     fontSize: 11,
     fontWeight: '700',
-    color: colors.textSecondary,
+    color: '#475569',
   },
   connectionBanner: {
     flexDirection: 'row',
@@ -261,30 +268,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 10,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   connectionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 8,
   },
   connectionDot: {
-    width: 9,
-    height: 9,
-    borderRadius: 4.5,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
   connectionMainText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '800',
     letterSpacing: 0.5,
   },
   connectionSubText: {
     fontSize: 11,
     color: colors.textSecondary,
-    fontWeight: '500',
-  },
-  configChevron: {
-    fontSize: 14,
   },
   statsBar: {
     flexDirection: 'row',
@@ -294,15 +297,15 @@ const styles = StyleSheet.create({
   statsGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 12,
   },
   statItem: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: 6,
+    gap: 5,
   },
   statNumber: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '800',
     color: colors.textPrimary,
   },
@@ -313,8 +316,8 @@ const styles = StyleSheet.create({
   },
   statDivider: {
     width: 1,
-    height: 16,
-    backgroundColor: '#E2E8F0',
+    height: 14,
+    backgroundColor: '#CBD5E1',
   },
   controlsGroup: {
     flexDirection: 'row',
@@ -322,29 +325,36 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   clearBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
+    paddingVertical: 5,
+    borderRadius: 8,
     backgroundColor: '#F1F5F9',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   clearBtnText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
-    color: colors.textSecondary,
+    color: '#64748B',
   },
   simulateBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
     backgroundColor: colors.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    ...shadows.sm,
+    paddingHorizontal: 11,
+    paddingVertical: 5,
+    borderRadius: 8,
   },
   btnDisabled: {
     opacity: 0.6,
   },
   simulateBtnText: {
-    color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
+    color: '#FFFFFF',
   },
 });

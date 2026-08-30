@@ -8,17 +8,29 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
 import { SystemActivityLog } from '../types/lead';
 
 interface SystemActivityDrawerProps {
   activities: SystemActivityLog[];
+  isExpanded?: boolean;
+  onToggleExpanded?: () => void;
 }
 
 export const SystemActivityDrawer: React.FC<SystemActivityDrawerProps> = ({
   activities,
+  isExpanded,
+  onToggleExpanded,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  const [internalExpanded, setInternalExpanded] = useState(false);
+  const expanded = isExpanded !== undefined ? isExpanded : internalExpanded;
+
+  const handleToggle = () => {
+    if (onToggleExpanded) {
+      onToggleExpanded();
+    } else {
+      setInternalExpanded((prev) => !prev);
+    }
+  };
 
   const formatTimestamp = (ts: string) => {
     try {
@@ -51,7 +63,7 @@ export const SystemActivityDrawer: React.FC<SystemActivityDrawerProps> = ({
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.headerBar}
-        onPress={() => setExpanded(!expanded)}
+        onPress={handleToggle}
         activeOpacity={0.7}
       >
         <View style={styles.headerLeft}>

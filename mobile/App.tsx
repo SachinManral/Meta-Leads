@@ -17,6 +17,8 @@ import { ServerConfigModal } from './src/components/ServerConfigModal';
 import { SystemActivityDrawer } from './src/components/SystemActivityDrawer';
 import { LiveToastAlert } from './src/components/LiveToastAlert';
 import { EmptyState } from './src/components/EmptyState';
+import { BottomTabBar, BottomTabKey } from './src/components/BottomTabBar';
+import { AnalyticsView } from './src/components/AnalyticsView';
 import { Lead, LeadStatus } from './src/types/lead';
 
 export default function App() {
@@ -36,9 +38,11 @@ export default function App() {
     clearLeads,
   } = useRealtimeLeads();
 
+  const [activeTab, setActiveTab] = useState<BottomTabKey>('inbox');
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [serverModalVisible, setServerModalVisible] = useState(false);
+  const [activityDrawerExpanded, setActivityDrawerExpanded] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
 
   const uncontactedCount = leads.filter((l) => l.status === 'new').length;
@@ -85,6 +89,17 @@ export default function App() {
     setAppMode((prev) => (prev === 'demo' ? 'dev' : 'demo'));
   };
 
+  const handleSelectTab = (tab: BottomTabKey) => {
+    if (tab === 'settings') {
+      setServerModalVisible(true);
+    } else if (tab === 'activity') {
+      setActiveTab('inbox');
+      setActivityDrawerExpanded((prev) => !prev);
+    } else {
+      setActiveTab(tab);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
@@ -96,39 +111,60 @@ export default function App() {
           onDismiss={dismissLatestLead}
         />
 
-        {/* Top Header */}
-        <Header
-          status={connectionStatus}
-          totalLeads={leads.length}
-          uncontactedCount={uncontactedCount}
-          appMode={appMode}
-          onToggleAppMode={toggleAppMode}
-          onSimulate={handleSimulate}
-          onClear={clearLeads}
-          onPressStatus={() => setServerModalVisible(true)}
-          isSimulating={isSimulating}
-        />
-
-        {/* Real-time Lead Inbox Stream */}
-        <FlatList
-          data={leads}
-          keyExtractor={(item) => item.id || item.leadgen_id}
-          renderItem={({ item }) => (
-            <LeadCard
-              lead={item}
-              onPressDetails={handleOpenDetails}
-              onQuickStatusChange={handleUpdateStatus}
+        {/* Dynamic Content: Inbox vs Analytics */}
+        {activeTab === 'analytics' ? (
+          <AnalyticsView
+            leads={leads}
+            onBackToInbox={() => setActiveTab('inbox')}
+          />
+        ) : (
+          <>
+            {/* Top Header */}
+            <Header
+              status={connectionStatus}
+              totalLeads={leads.length}
+              uncontactedCount={uncontactedCount}
+              appMode={appMode}
+              onToggleAppMode={toggleAppMode}
+              onSimulate={handleSimulate}
+              onClear={clearLeads}
+              onPressStatus={() => setServerModalVisible(true)}
+              isSimulating={isSimulating}
             />
-          )}
-          contentContainerStyle={styles.listContent}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <EmptyState appMode={appMode} onSimulate={handleSimulate} />
-          }
-        />
 
-        {/* Collapsible System Activity Log Stream */}
-        <SystemActivityDrawer activities={activities} />
+            {/* Real-time Lead Inbox Stream */}
+            <FlatList
+              data={leads}
+              keyExtractor={(item) => item.id || item.leadgen_id}
+              renderItem={({ item }) => (
+                <LeadCard
+                  lead={item}
+                  onPressDetails={handleOpenDetails}
+                  onQuickStatusChange={handleUpdateStatus}
+                />
+              )}
+              contentContainerStyle={styles.listContent}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={
+                <EmptyState appMode={appMode} onSimulate={handleSimulate} />
+              }
+            />
+
+            {/* Collapsible System Activity Log Stream */}
+            <SystemActivityDrawer
+              activities={activities}
+              isExpanded={activityDrawerExpanded}
+              onToggleExpanded={() => setActivityDrawerExpanded((prev) => !prev)}
+            />
+          </>
+        )}
+
+        {/* Sleek iOS Bottom Tab Bar (Only original vector icons, no text labels) */}
+        <BottomTabBar
+          activeTab={activeTab}
+          onSelectTab={handleSelectTab}
+          uncontactedBadgeCount={uncontactedCount}
+        />
 
         {/* Lead Detail & Technical Inspector Modal */}
         <LeadDetailModal
