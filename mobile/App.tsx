@@ -19,6 +19,7 @@ import { EmptyState } from './src/components/EmptyState';
 import { BottomTabBar, BottomTabKey } from './src/components/BottomTabBar';
 import { AnalyticsView } from './src/components/AnalyticsView';
 import { ActivityLogView } from './src/components/ActivityLogView';
+import { SettingsView } from './src/components/SettingsView';
 import { Lead, LeadStatus } from './src/types/lead';
 
 export default function App() {
@@ -89,11 +90,7 @@ export default function App() {
   };
 
   const handleSelectTab = (tab: BottomTabKey) => {
-    if (tab === 'settings') {
-      setServerModalVisible(true);
-    } else {
-      setActiveTab(tab);
-    }
+    setActiveTab(tab);
   };
 
   return (
@@ -116,6 +113,13 @@ export default function App() {
         ) : activeTab === 'grid' ? (
           <ActivityLogView
             activities={activities}
+            onBackToInbox={() => setActiveTab('inbox')}
+          />
+        ) : activeTab === 'settings' ? (
+          <SettingsView
+            serverUrl={serverUrl}
+            connectionStatus={connectionStatus}
+            onOpenServerConfig={() => setServerModalVisible(true)}
             onBackToInbox={() => setActiveTab('inbox')}
           />
         ) : (
@@ -153,7 +157,7 @@ export default function App() {
           </>
         )}
 
-        {/* High-End Floating iOS Dark Capsule Dock (Matching Reference Image) */}
+        {/* High-End Floating iOS Transparent Glass Capsule Dock */}
         <BottomTabBar
           activeTab={activeTab}
           onSelectTab={handleSelectTab}
@@ -195,7 +199,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingTop: 8,
-    paddingBottom: 110, // Generous breathing room so cards scroll completely above the floating dock
+    paddingBottom: 110,
     flexGrow: 1,
   },
 });

@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import { colors } from '../theme/colors';
+import { colors, shadows } from '../theme/colors';
 import { SystemActivityLog } from '../types/lead';
 
 interface ActivityLogViewProps {
@@ -20,92 +19,172 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({
   activities,
   onBackToInbox,
 }) => {
+  const [filter, setFilter] = useState<'all' | 'leads' | 'system'>('all');
+
   const formatTimestamp = (ts: string) => {
     try {
       const d = new Date(ts);
-      return d.toTimeString().split(' ')[0];
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     } catch {
       return '';
     }
   };
 
-  const getEventBadge = (type: SystemActivityLog['type']): { icon: keyof typeof Ionicons.glyphMap; color: string; label: string } => {
-    switch (type) {
+  const getEventDetails = (act: SystemActivityLog) => {
+    switch (act.type) {
       case 'webhook_received':
-        return { icon: 'mail', color: '#818CF8', label: 'Webhook' };
+        return {
+          icon: 'logo-facebook' as const,
+          iconColor: '#1877F2',
+          bgColor: '#EFF6FF',
+          title: 'Meta Webhook Ingested',
+          category: 'leads',
+        };
       case 'signature_verified':
-        return { icon: 'shield-checkmark', color: '#10B981', label: 'HMAC' };
+        return {
+          icon: 'shield-checkmark' as const,
+          iconColor: '#10B981',
+          bgColor: '#ECFDF5',
+          title: 'HMAC-SHA256 Authenticated',
+          category: 'system',
+        };
       case 'lead_fetched':
-        return { icon: 'cloud-download', color: '#38BDF8', label: 'Graph API' };
+        return {
+          icon: 'cloud-download' as const,
+          iconColor: '#0284C7',
+          bgColor: '#F0F9FF',
+          title: 'Graph API Data Normalized',
+          category: 'leads',
+        };
       case 'lead_broadcast':
-        return { icon: 'flash', color: '#F59E0B', label: 'Broadcast' };
+        return {
+          icon: 'flash' as const,
+          iconColor: '#F59E0B',
+          bgColor: '#FEF3C7',
+          title: 'Live Lead Dispatched',
+          category: 'leads',
+        };
       case 'status_updated':
-        return { icon: 'bookmark', color: '#A855F7', label: 'Status' };
+        return {
+          icon: 'bookmark' as const,
+          iconColor: '#7C3AED',
+          bgColor: '#F5F3FF',
+          title: 'Pipeline Status Updated',
+          category: 'leads',
+        };
       case 'client_connected':
       default:
-        return { icon: 'radio-button-on', color: '#64748B', label: 'Client' };
+        return {
+          icon: 'phone-portrait-outline' as const,
+          iconColor: '#64748B',
+          bgColor: '#F1F5F9',
+          title: 'Device Connected',
+          category: 'system',
+        };
     }
   };
 
+  const filteredActivities = activities.filter((act) => {
+    if (filter === 'all') return true;
+    const details = getEventDetails(act);
+    return details.category === filter;
+  });
+
   return (
     <View style={styles.container}>
-      {/* Top Header */}
+      {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.title}>System Telemetry Log</Text>
-          <Text style={styles.subtitle}>Real-time cryptographic pipeline events</Text>
+          <Text style={styles.title}>Activity Stream</Text>
+          <Text style={styles.subtitle}>Real-time delivery audit trail</Text>
         </View>
 
-        <TouchableOpacity style={styles.inboxBtn} onPress={onBackToInbox} activeOpacity={0.7}>
-          <Ionicons name="home" size={14} color={colors.primary} />
-          <Text style={styles.inboxBtnText}>Inbox</Text>
+        <TouchableOpacity style={styles.backBtn} onPress={onBackToInbox} activeOpacity={0.7}>
+          <Feather name="arrow-left" size={13} color="#0F172A" />
+          <Text style={styles.backBtnText}>Inbox</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Terminal Card */}
-      <View style={styles.terminalCard}>
-        <View style={styles.terminalHeader}>
-          <View style={styles.terminalDots}>
-            <View style={[styles.dot, { backgroundColor: '#EF4444' }]} />
-            <View style={[styles.dot, { backgroundColor: '#F59E0B' }]} />
-            <View style={[styles.dot, { backgroundColor: '#10B981' }]} />
-          </View>
-          <Text style={styles.terminalTitle}>gateway-stream.log</Text>
-          <View style={styles.badgeCount}>
-            <Text style={styles.badgeText}>{activities.length} events</Text>
-          </View>
-        </View>
-
-        <ScrollView
-          style={styles.logScroll}
-          contentContainerStyle={styles.logContent}
-          showsVerticalScrollIndicator={false}
+      {/* Filter Chips */}
+      <View style={styles.filterRow}>
+        <TouchableOpacity
+          style={[styles.filterChip, filter === 'all' && styles.filterChipActive]}
+          onPress={() => setFilter('all')}
+          activeOpacity={0.7}
         >
-          {activities.length === 0 ? (
-            <View style={styles.emptyState}>
-              <Feather name="terminal" size={28} color="#475569" />
-              <Text style={styles.emptyText}>Waiting for system activity...</Text>
-              <Text style={styles.emptySub}>
-                Trigger a lead to observe real-time cryptographic logs
-              </Text>
-            </View>
-          ) : (
-            activities.map((act) => {
-              const badge = getEventBadge(act.type);
-              return (
-                <View key={act.id} style={styles.logItem}>
-                  <Text style={styles.logTime}>{formatTimestamp(act.timestamp)}</Text>
-                  <View style={[styles.tagPill, { backgroundColor: `${badge.color}22` }]}>
-                    <Ionicons name={badge.icon} size={10} color={badge.color} />
-                    <Text style={[styles.tagText, { color: badge.color }]}>{badge.label}</Text>
-                  </View>
-                  <Text style={styles.logMsg}>{act.message}</Text>
-                </View>
-              );
-            })
-          )}
-        </ScrollView>
+          <Text style={[styles.filterChipText, filter === 'all' && styles.filterChipTextActive]}>
+            All Events ({activities.length})
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.filterChip, filter === 'leads' && styles.filterChipActive]}
+          onPress={() => setFilter('leads')}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.filterChipText, filter === 'leads' && styles.filterChipTextActive]}>
+            Lead Deliveries
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.filterChip, filter === 'system' && styles.filterChipActive]}
+          onPress={() => setFilter('system')}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.filterChipText, filter === 'system' && styles.filterChipTextActive]}>
+            Gateway Logs
+          </Text>
+        </TouchableOpacity>
       </View>
+
+      {/* Modern Event Timeline Feed (NOT a terminal) */}
+      <ScrollView
+        style={styles.timelineScroll}
+        contentContainerStyle={styles.timelineContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {filteredActivities.length === 0 ? (
+          <View style={styles.emptyState}>
+            <View style={styles.emptyIconCircle}>
+              <Feather name="activity" size={24} color="#94A3B8" />
+            </View>
+            <Text style={styles.emptyTitle}>No Activity Recorded Yet</Text>
+            <Text style={styles.emptySub}>
+              Trigger a test lead or submit a Meta Lead form to view live audit events.
+            </Text>
+          </View>
+        ) : (
+          filteredActivities.map((act, index) => {
+            const details = getEventDetails(act);
+            const isLast = index === filteredActivities.length - 1;
+
+            return (
+              <View key={act.id} style={styles.eventRow}>
+                {/* Left Timeline Indicator */}
+                <View style={styles.timelineCol}>
+                  <View style={[styles.iconCircle, { backgroundColor: details.bgColor }]}>
+                    <Ionicons name={details.icon} size={15} color={details.iconColor} />
+                  </View>
+                  {!isLast && <View style={styles.timelineLine} />}
+                </View>
+
+                {/* Event Card */}
+                <View style={styles.eventCard}>
+                  <View style={styles.cardTopRow}>
+                    <Text style={styles.eventTitle}>{details.title}</Text>
+                    <Text style={styles.eventTime}>{formatTimestamp(act.timestamp)}</Text>
+                  </View>
+
+                  <Text style={styles.eventMessage} numberOfLines={2}>
+                    {act.message}
+                  </Text>
+                </View>
+              </View>
+            );
+          })
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -114,19 +193,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F8FAFC',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 12,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '800',
     color: colors.textPrimary,
-    letterSpacing: -0.4,
+    letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 12,
@@ -134,118 +214,133 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 2,
   },
-  inboxBtn: {
+  backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#EFF6FF',
+    gap: 5,
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 10,
+    borderRadius: 9,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
-  inboxBtnText: {
+  backBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: colors.primary,
+    color: '#0F172A',
   },
-  terminalCard: {
-    flex: 1,
-    backgroundColor: '#0F172A',
-    borderRadius: 18,
-    overflow: 'hidden',
-    marginBottom: 100, // Clear floating dock
+  filterRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 14,
+  },
+  filterChip: {
+    paddingHorizontal: 11,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#1E293B',
+    borderColor: '#E2E8F0',
   },
-  terminalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#1E293B',
-    borderBottomWidth: 1,
-    borderBottomColor: '#334155',
-  },
-  terminalDots: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  terminalTitle: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: '#94A3B8',
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  badgeCount: {
+  filterChipActive: {
     backgroundColor: '#0F172A',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    borderColor: '#0F172A',
   },
-  badgeText: {
-    fontSize: 10,
-    color: '#38BDF8',
+  filterChipText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748B',
+  },
+  filterChipTextActive: {
+    color: '#FFFFFF',
     fontWeight: '700',
   },
-  logScroll: {
+  timelineScroll: {
     flex: 1,
-    padding: 14,
   },
-  logContent: {
-    gap: 8,
+  timelineContent: {
+    paddingBottom: 110, // Clear floating bottom dock
   },
-  logItem: {
+  eventRow: {
     flexDirection: 'row',
+    gap: 12,
+    minHeight: 74,
+  },
+  timelineCol: {
     alignItems: 'center',
-    gap: 8,
-    paddingVertical: 5,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#1E293B',
+    width: 32,
   },
-  logTime: {
-    fontSize: 10,
-    color: '#64748B',
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+  iconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...shadows.sm,
   },
-  tagPill: {
+  timelineLine: {
+    width: 2,
+    flex: 1,
+    backgroundColor: '#E2E8F0',
+    marginVertical: 4,
+  },
+  eventCard: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    ...shadows.sm,
+  },
+  cardTopRow: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
+    marginBottom: 4,
   },
-  tagText: {
-    fontSize: 9,
-    fontWeight: '800',
-    letterSpacing: 0.3,
+  eventTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.textPrimary,
   },
-  logMsg: {
+  eventTime: {
     fontSize: 11,
-    color: '#E2E8F0',
-    flex: 1,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    color: '#64748B',
+    fontWeight: '500',
+  },
+  eventMessage: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    lineHeight: 17,
   },
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 50,
+    paddingVertical: 60,
     gap: 8,
   },
-  emptyText: {
-    fontSize: 13,
+  emptyIconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  emptyTitle: {
+    fontSize: 15,
     fontWeight: '700',
-    color: '#94A3B8',
+    color: colors.textPrimary,
   },
   emptySub: {
-    fontSize: 11,
-    color: '#64748B',
+    fontSize: 12,
+    color: colors.textSecondary,
     textAlign: 'center',
+    maxWidth: 280,
+    lineHeight: 18,
   },
 });
