@@ -274,14 +274,14 @@ export const LeadCard: React.FC<LeadCardProps> = React.memo(({
             </View>
           )}
 
-          {lead.notes && (
+          {(lead as Lead).notes ? (
             <View style={styles.notesPreview}>
               <Feather name="edit-3" size={11} color="#B45309" />
               <Text style={styles.notesValue} numberOfLines={1}>
-                {lead.notes}
+                {(lead as Lead).notes}
               </Text>
             </View>
-          )}
+          ) : null}
         </View>
 
         {/* Quick Action Button Bar: Call, SMS, Email, Details */}
