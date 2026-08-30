@@ -329,9 +329,9 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   cardHighlight: {
-    borderColor: colors.success,
-    borderWidth: 1.5,
-    backgroundColor: '#FAFCFA',
+    borderColor: '#CBD5E1',
+    backgroundColor: '#FFFFFF',
+    ...shadows.md,
   },
   metaRow: {
     flexDirection: 'row',

@@ -7,7 +7,7 @@ import {
   Platform,
   View,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
 import { Lead } from '../types/lead';
 
@@ -28,20 +28,34 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
     if (lead) {
       Animated.spring(slideAnim, {
         toValue: 0,
-        friction: 7,
-        tension: 60,
+        friction: 6,
+        tension: 70,
         useNativeDriver: Platform.OS !== 'web',
       }).start();
+
+      // Auto dismiss after 6 seconds
+      const timer = setTimeout(() => {
+        onDismiss();
+      }, 6000);
+
+      return () => clearTimeout(timer);
     } else {
       Animated.timing(slideAnim, {
         toValue: -140,
-        duration: 200,
+        duration: 180,
         useNativeDriver: Platform.OS !== 'web',
       }).start();
     }
   }, [lead]);
 
   if (!lead) return null;
+
+  const latency = lead.telemetry?.pipeline_latency_ms || 45;
+  const service =
+    lead.custom_fields?.['Interested Service'] ||
+    lead.custom_fields?.['interested_service'] ||
+    lead.form_name ||
+    'Meta Lead Inquiry';
 
   return (
     <Animated.View
@@ -53,34 +67,54 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
       ]}
     >
       <TouchableOpacity
-        style={styles.toast}
+        style={styles.toastCard}
         onPress={() => onPress(lead)}
-        activeOpacity={0.9}
+        activeOpacity={0.92}
       >
-        <View style={styles.iconCircle}>
-          <Ionicons name="flash" size={18} color="#38BDF8" />
+        {/* Left: Meta App Icon with Glowing Green Dot */}
+        <View style={styles.appIconWrapper}>
+          <View style={styles.appIcon}>
+            <Ionicons name="logo-facebook" size={18} color="#FFFFFF" />
+          </View>
+          <View style={styles.livePulseDot} />
         </View>
 
-        <View style={styles.content}>
-          <View style={styles.titleRow}>
-            <Text style={styles.badge}>NEW LEAD INGESTED</Text>
-            <Text style={styles.latency}>
-              ⚡ {lead.telemetry?.pipeline_latency_ms || 84}ms
-            </Text>
+        {/* Center: Push Notification Content */}
+        <View style={styles.contentColumn}>
+          <View style={styles.appMetaRow}>
+            <Text style={styles.appMetaText}>META LEAD ADS</Text>
+            <Text style={styles.appMetaDivider}>·</Text>
+            <Text style={styles.appMetaTime}>Just now</Text>
           </View>
-          <Text style={styles.leadName} numberOfLines={1}>
+
+          <Text style={styles.leadTitle} numberOfLines={1}>
             {lead.full_name}
           </Text>
-          <Text style={styles.leadSub} numberOfLines={1}>
-            {lead.custom_fields?.['Interested Service'] ||
-              lead.form_name ||
-              'Meta Lead Ads submission'}
+
+          <Text style={styles.leadSubtitle} numberOfLines={1}>
+            {service}
           </Text>
         </View>
 
-        <TouchableOpacity style={styles.closeBtn} onPress={onDismiss} activeOpacity={0.7}>
-          <Ionicons name="close" size={16} color="#64748B" />
-        </TouchableOpacity>
+        {/* Right: Latency Badge & Dismiss Button */}
+        <View style={styles.rightActions}>
+          <View style={styles.latencyPill}>
+            <Ionicons name="flash" size={10} color="#10B981" />
+            <Text style={styles.latencyText}>{latency}ms</Text>
+          </View>
+
+          <TouchableOpacity
+            style={styles.dismissBtn}
+            onPress={(e) => {
+              e.stopPropagation();
+              onDismiss();
+            }}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            activeOpacity={0.7}
+          >
+            <Feather name="x" size={14} color="#94A3B8" />
+          </TouchableOpacity>
+        </View>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -89,62 +123,120 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: Platform.OS === 'ios' ? 56 : 48,
-    left: 16,
-    right: 16,
-    zIndex: 9999,
+    top: Platform.OS === 'ios' ? 14 : 10,
+    left: 12,
+    right: 12,
+    zIndex: 99999,
   },
-  toast: {
-    backgroundColor: '#0F172A',
-    borderRadius: 14,
-    padding: 12,
+  toastCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    backgroundColor: Platform.select({
+      ios: 'rgba(255, 255, 255, 0.95)',
+      android: 'rgba(255, 255, 255, 0.98)',
+      web: 'rgba(255, 255, 255, 0.94)',
+    }),
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
     borderWidth: 1,
-    borderColor: '#38BDF8',
-    ...shadows.lg,
+    borderColor: '#E2E8F0',
+    gap: 12,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#0F172A',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.14,
+        shadowRadius: 20,
+      },
+      android: {
+        elevation: 14,
+      },
+      web: {
+        boxShadow: '0 12px 32px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(0, 0, 0, 0.04)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+      },
+    }),
   },
-  iconCircle: {
+  appIconWrapper: {
+    position: 'relative',
+  },
+  appIcon: {
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: 'rgba(56, 189, 248, 0.15)',
+    backgroundColor: '#1877F2',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  content: {
-    flex: 1,
+  livePulseDot: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#10B981',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
-  titleRow: {
+  contentColumn: {
+    flex: 1,
+    gap: 1,
+  },
+  appMetaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 2,
+    gap: 4,
   },
-  badge: {
+  appMetaText: {
     fontSize: 9,
-    fontWeight: '900',
-    color: '#38BDF8',
-    letterSpacing: 0.6,
+    fontWeight: '800',
+    color: '#64748B',
+    letterSpacing: 0.5,
   },
-  latency: {
+  appMetaDivider: {
+    fontSize: 9,
+    color: '#94A3B8',
+  },
+  appMetaTime: {
     fontSize: 10,
-    fontWeight: '700',
-    color: '#10B981',
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    color: '#94A3B8',
+    fontWeight: '500',
   },
-  leadName: {
+  leadTitle: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#FFFFFF',
+    color: '#0F172A',
+    letterSpacing: -0.2,
   },
-  leadSub: {
+  leadSubtitle: {
     fontSize: 11,
-    color: '#94A3B8',
-    marginTop: 1,
+    color: '#64748B',
+    fontWeight: '500',
   },
-  closeBtn: {
-    padding: 4,
+  rightActions: {
+    alignItems: 'flex-end',
+    gap: 8,
+  },
+  latencyPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: '#F0FDF4',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#DCFCE7',
+  },
+  latencyText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#16A34A',
+  },
+  dismissBtn: {
+    padding: 2,
   },
 });
