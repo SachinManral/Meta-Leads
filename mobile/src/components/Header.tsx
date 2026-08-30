@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
-import { colors, shadows } from '../theme/colors';
+import { colors } from '../theme/colors';
 import { ConnectionStatus, AppMode } from '../types/lead';
 
 interface HeaderProps {
@@ -58,41 +58,33 @@ export const Header: React.FC<HeaderProps> = ({
     }
   }, [status]);
 
-  const getConnectionConfig = () => {
+  const getConnectionDotColor = () => {
     switch (status) {
       case 'connected':
-        return {
-          pillBg: '#ECFDF5',
-          dotBg: '#10B981',
-          mainText: 'LIVE',
-          subText: 'Receiving leads automatically',
-          textColor: '#047857',
-        };
+        return '#10B981';
       case 'connecting':
-        return {
-          pillBg: '#FFFBEB',
-          dotBg: '#F59E0B',
-          mainText: 'RECONNECTING',
-          subText: 'Restoring live connection...',
-          textColor: '#B45309',
-        };
+        return '#F59E0B';
       case 'disconnected':
       default:
-        return {
-          pillBg: '#FEF2F2',
-          dotBg: '#EF4444',
-          mainText: 'OFFLINE',
-          subText: 'Tap to configure server',
-          textColor: '#B91C1C',
-        };
+        return '#EF4444';
     }
   };
 
-  const conn = getConnectionConfig();
+  const getConnectionText = () => {
+    switch (status) {
+      case 'connected':
+        return 'Live Webhook Ingestion';
+      case 'connecting':
+        return 'Connecting to Gateway...';
+      case 'disconnected':
+      default:
+        return 'Offline (Tap to Config)';
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Top Header Row: Brand & Settings / Mode Switcher */}
+      {/* Top Header Row: Brand & Mode Switcher */}
       <View style={styles.topRow}>
         <View style={styles.brandRow}>
           <View style={styles.metaIconBadge}>
@@ -100,7 +92,20 @@ export const Header: React.FC<HeaderProps> = ({
           </View>
           <View>
             <Text style={styles.appTitle}>Meta Leads Inbox</Text>
-            <Text style={styles.subtitle}>Real-time Lead Ingestion</Text>
+            {/* Clean Apple-style live status row (NO colorful rectangular box) */}
+            <TouchableOpacity
+              style={styles.statusRow}
+              onPress={onPressStatus}
+              activeOpacity={0.7}
+            >
+              <Animated.View
+                style={[
+                  styles.statusDot,
+                  { backgroundColor: getConnectionDotColor(), opacity: pulseAnim },
+                ]}
+              />
+              <Text style={styles.statusText}>{getConnectionText()}</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -116,57 +121,27 @@ export const Header: React.FC<HeaderProps> = ({
               color="#475569"
             />
             <Text style={styles.modeBadgeText}>
-              {appMode === 'demo' ? 'Demo Mode' : 'Dev Mode'}
+              {appMode === 'demo' ? 'Demo' : 'Dev'}
             </Text>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* Live Connection Status Banner */}
-      <TouchableOpacity
-        style={[styles.connectionBanner, { backgroundColor: conn.pillBg }]}
-        onPress={onPressStatus}
-        activeOpacity={0.8}
-      >
-        <View style={styles.connectionLeft}>
-          <Animated.View
-            style={[
-              styles.connectionDot,
-              { backgroundColor: conn.dotBg, opacity: pulseAnim },
-            ]}
-          />
-          <View>
-            <Text style={[styles.connectionMainText, { color: conn.textColor }]}>
-              {conn.mainText}
-            </Text>
-            <Text style={styles.connectionSubText}>{conn.subText}</Text>
-          </View>
-        </View>
-
-        <Ionicons name="settings-sharp" size={14} color={conn.textColor} />
-      </TouchableOpacity>
-
-      {/* Stats and Operational Action Bar */}
+      {/* Clean Stats & Operational Action Bar */}
       <View style={styles.statsBar}>
-        <View style={styles.statsGroup}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{totalLeads}</Text>
-            <Text style={styles.statLabel}>Total Leads</Text>
-          </View>
-
-          <View style={styles.statDivider} />
-
-          <View style={styles.statItem}>
-            <Text
-              style={[
-                styles.statNumber,
-                uncontactedCount > 0 && { color: colors.primary },
-              ]}
-            >
-              {uncontactedCount}
-            </Text>
-            <Text style={styles.statLabel}>Uncontacted</Text>
-          </View>
+        <View style={styles.statsInline}>
+          <Text style={styles.statCount}>{totalLeads}</Text>
+          <Text style={styles.statLabel}>Total Leads</Text>
+          <Text style={styles.statDivider}>·</Text>
+          <Text
+            style={[
+              styles.statCount,
+              uncontactedCount > 0 && { color: colors.primary },
+            ]}
+          >
+            {uncontactedCount}
+          </Text>
+          <Text style={styles.statLabel}>Uncontacted</Text>
         </View>
 
         <View style={styles.controlsGroup}>
@@ -188,7 +163,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <ActivityIndicator size="small" color="#FFFFFF" />
               ) : (
                 <>
-                  <Ionicons name="add" size={14} color="#FFFFFF" />
+                  <Ionicons name="add" size={13} color="#FFFFFF" />
                   <Text style={styles.simulateBtnText}>Simulate</Text>
                 </>
               )}
@@ -202,8 +177,8 @@ export const Header: React.FC<HeaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.surface,
-    paddingHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 18,
     paddingTop: 12,
     paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -227,7 +202,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#1877F2',
     alignItems: 'center',
     justifyContent: 'center',
-    ...shadows.sm,
   },
   appTitle: {
     fontSize: 17,
@@ -235,8 +209,19 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     letterSpacing: -0.3,
   },
-  subtitle: {
-    fontSize: 12,
+  statusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginTop: 2,
+  },
+  statusDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+  },
+  statusText: {
+    fontSize: 11,
     color: colors.textSecondary,
     fontWeight: '500',
   },
@@ -252,7 +237,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 9,
     paddingVertical: 5,
     borderRadius: 12,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#F8FAFC',
     borderWidth: 1,
     borderColor: '#E2E8F0',
   },
@@ -261,51 +246,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#475569',
   },
-  connectionBanner: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  connectionLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  connectionDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  connectionMainText: {
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-  },
-  connectionSubText: {
-    fontSize: 11,
-    color: colors.textSecondary,
-  },
   statsBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingTop: 4,
   },
-  statsGroup: {
+  statsInline: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-  },
-  statItem: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
     gap: 5,
   },
-  statNumber: {
-    fontSize: 15,
+  statCount: {
+    fontSize: 14,
     fontWeight: '800',
     color: colors.textPrimary,
   },
@@ -315,9 +268,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   statDivider: {
-    width: 1,
-    height: 14,
-    backgroundColor: '#CBD5E1',
+    fontSize: 14,
+    color: '#CBD5E1',
+    marginHorizontal: 3,
   },
   controlsGroup: {
     flexDirection: 'row',
@@ -331,7 +284,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 8,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: '#F8FAFC',
     borderWidth: 1,
     borderColor: '#E2E8F0',
   },
@@ -343,7 +296,7 @@ const styles = StyleSheet.create({
   simulateBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
+    gap: 4,
     backgroundColor: colors.primary,
     paddingHorizontal: 11,
     paddingVertical: 5,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { colors, shadows } from '../theme/colors';
+import { Ionicons, Feather } from '@expo/vector-icons';
+import { colors } from '../theme/colors';
 import { AppMode } from '../types/lead';
 
 interface EmptyStateProps {
@@ -12,51 +12,43 @@ interface EmptyStateProps {
 export const EmptyState: React.FC<EmptyStateProps> = ({ appMode, onSimulate }) => {
   return (
     <View style={styles.container}>
-      {/* Warm Pastel Hero Circle */}
-      <View style={styles.heroCircle}>
-        <View style={styles.innerCircle}>
-          <Ionicons name="sparkles" size={24} color="#D97706" />
-        </View>
+      {/* Minimalist Apple-style Monochrome Icon (NO bright colored circles) */}
+      <View style={styles.iconCircle}>
+        <Feather name="inbox" size={28} color="#64748B" />
       </View>
 
-      <Text style={styles.title}>Your Live Inbox is Ready</Text>
+      <Text style={styles.title}>Awaiting Inbound Leads</Text>
       <Text style={styles.description}>
-        When a prospect submits a Meta Lead Ads form, it will land here instantly with zero user touch.
+        Submissions from Meta Lead Ads forms will appear here in real time via WebSockets with zero manual refresh.
       </Text>
 
-      {/* Guide Card with Pastel Border */}
+      {/* Clean Minimalist Protocol Card (Neutral, no colored blocks) */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
-          <Ionicons name="flash-outline" size={15} color={colors.primary} />
+          <Feather name="check-circle" size={14} color="#64748B" />
           <Text style={styles.cardTitle}>Live Testing Protocol</Text>
         </View>
 
         <View style={styles.stepRow}>
-          <View style={styles.stepBadge}>
-            <Text style={styles.stepNum}>1</Text>
-          </View>
+          <Text style={styles.stepNum}>1</Text>
           <Text style={styles.stepText}>Open Meta Lead Ads Testing Tool</Text>
         </View>
 
         <View style={styles.stepRow}>
-          <View style={styles.stepBadge}>
-            <Text style={styles.stepNum}>2</Text>
-          </View>
-          <Text style={styles.stepText}>Select your Page & Lead Ad Form</Text>
+          <Text style={styles.stepNum}>2</Text>
+          <Text style={styles.stepText}>Select your Facebook Page & Lead Form</Text>
         </View>
 
         <View style={styles.stepRow}>
-          <View style={styles.stepBadge}>
-            <Text style={styles.stepNum}>3</Text>
-          </View>
-          <Text style={styles.stepText}>Click &quot;Create Lead&quot; $\rightarrow$ Live Sync in &lt;100ms</Text>
+          <Text style={styles.stepNum}>3</Text>
+          <Text style={styles.stepText}>Click &quot;Create Lead&quot; for instant live delivery</Text>
         </View>
       </View>
 
       {appMode === 'dev' && (
         <TouchableOpacity style={styles.simulateBtn} onPress={onSimulate} activeOpacity={0.8}>
-          <Ionicons name="add-circle" size={16} color="#FFFFFF" />
-          <Text style={styles.simulateBtnText}>Simulate Inbound Lead</Text>
+          <Ionicons name="add" size={16} color="#FFFFFF" />
+          <Text style={styles.simulateBtnText}>Simulate Test Lead</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -71,31 +63,22 @@ const styles = StyleSheet.create({
     paddingTop: 36,
     paddingBottom: 24,
   },
-  heroCircle: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    backgroundColor: '#FEF3C7', // Warm sunny amber pastel from reference
+  iconCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#F1F5F9', // Clean neutral gray circle
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
-    ...shadows.sm,
-  },
-  innerCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#FDE68A',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight: '800',
     color: colors.textPrimary,
     textAlign: 'center',
     marginBottom: 6,
-    letterSpacing: -0.4,
+    letterSpacing: -0.3,
   },
   description: {
     fontSize: 13,
@@ -107,14 +90,13 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 18,
+    borderRadius: 16,
     padding: 16,
     width: '100%',
     maxWidth: 360,
     gap: 10,
     borderWidth: 1,
     borderColor: '#E2E8F0',
-    ...shadows.sm,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -132,18 +114,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  stepBadge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#EFF6FF',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   stepNum: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '800',
-    color: colors.primary,
+    color: '#64748B',
+    width: 16,
   },
   stepText: {
     fontSize: 12,
@@ -156,14 +131,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     backgroundColor: colors.primary,
-    paddingVertical: 11,
-    paddingHorizontal: 20,
-    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 10,
     marginTop: 18,
-    ...shadows.sm,
   },
   simulateBtnText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     color: '#FFFFFF',
   },

@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Platform,
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
@@ -25,7 +24,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
   const qualified = leads.filter((l) => l.status === 'qualified').length;
   const closed = leads.filter((l) => l.status === 'closed').length;
 
-  // Compute average speed-to-lead for contacted leads
   const responseTimes = leads
     .map((l) => l.response_time_seconds)
     .filter((t): t is number => typeof t === 'number' && t > 0);
@@ -47,7 +45,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </View>
 
         <TouchableOpacity style={styles.backBtn} onPress={onBackToInbox} activeOpacity={0.7}>
-          <Ionicons name="file-tray-full" size={14} color={colors.primary} />
+          <Feather name="arrow-left" size={14} color="#0F172A" />
           <Text style={styles.backBtnText}>Inbox</Text>
         </TouchableOpacity>
       </View>
@@ -56,11 +54,11 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
       <View style={styles.heroCard}>
         <View style={styles.heroHeader}>
           <View style={styles.heroIconBg}>
-            <Ionicons name="flash" size={20} color="#FFFFFF" />
+            <Ionicons name="flash" size={18} color="#FFFFFF" />
           </View>
           <View style={styles.heroTitleGroup}>
             <Text style={styles.heroLabel}>AVERAGE SPEED-TO-LEAD</Text>
-            <Text style={styles.heroSub}>Time to first contact</Text>
+            <Text style={styles.heroSub}>Inbound to first contact</Text>
           </View>
         </View>
 
@@ -70,16 +68,16 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </View>
 
         <View style={styles.heroBadge}>
-          <Ionicons name="checkmark-circle" size={13} color="#10B981" />
-          <Text style={styles.heroBadgeText}>Within the 5-minute golden conversion window</Text>
+          <Feather name="check" size={12} color="#10B981" />
+          <Text style={styles.heroBadgeText}>Within the 5-minute conversion window</Text>
         </View>
       </View>
 
-      {/* 2x2 Metric Grid */}
+      {/* 2x2 Metric Grid (Clean monochrome styling, NO colorful background boxes) */}
       <View style={styles.grid}>
         <View style={styles.gridCard}>
-          <View style={[styles.gridIconBg, { backgroundColor: '#EFF6FF' }]}>
-            <Ionicons name="people" size={16} color="#2563EB" />
+          <View style={styles.gridIconBg}>
+            <Feather name="users" size={16} color="#0F172A" />
           </View>
           <Text style={styles.gridNumber}>{total}</Text>
           <Text style={styles.gridLabel}>Total Leads</Text>
@@ -87,47 +85,47 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </View>
 
         <View style={styles.gridCard}>
-          <View style={[styles.gridIconBg, { backgroundColor: '#ECFDF5' }]}>
-            <Ionicons name="call" size={16} color="#059669" />
+          <View style={styles.gridIconBg}>
+            <Feather name="phone-call" size={16} color="#0F172A" />
           </View>
-          <Text style={[styles.gridNumber, { color: '#059669' }]}>{contactRate}%</Text>
+          <Text style={styles.gridNumber}>{contactRate}%</Text>
           <Text style={styles.gridLabel}>Contact Rate</Text>
           <Text style={styles.gridSub}>{contacted} contacted</Text>
         </View>
 
         <View style={styles.gridCard}>
-          <View style={[styles.gridIconBg, { backgroundColor: '#FDF4FF' }]}>
-            <Ionicons name="star" size={16} color="#9333EA" />
+          <View style={styles.gridIconBg}>
+            <Feather name="award" size={16} color="#0F172A" />
           </View>
-          <Text style={[styles.gridNumber, { color: '#9333EA' }]}>{qualified}</Text>
-          <Text style={styles.gridLabel}>Qualified Leads</Text>
-          <Text style={styles.gridSub}>High Intent</Text>
+          <Text style={styles.gridNumber}>{qualified}</Text>
+          <Text style={styles.gridLabel}>Qualified</Text>
+          <Text style={styles.gridSub}>High Purchase Intent</Text>
         </View>
 
         <View style={styles.gridCard}>
-          <View style={[styles.gridIconBg, { backgroundColor: '#F0FDF4' }]}>
-            <Ionicons name="shield-checkmark" size={16} color="#16A34A" />
+          <View style={styles.gridIconBg}>
+            <Feather name="shield" size={16} color="#0F172A" />
           </View>
-          <Text style={[styles.gridNumber, { color: '#16A34A' }]}>100%</Text>
+          <Text style={styles.gridNumber}>100%</Text>
           <Text style={styles.gridLabel}>HMAC Verified</Text>
-          <Text style={styles.gridSub}>SHA-256 Auth</Text>
+          <Text style={styles.gridSub}>SHA-256 Authenticated</Text>
         </View>
       </View>
 
-      {/* Funnel Progress Breakdown */}
+      {/* Pipeline Funnel Card */}
       <View style={styles.funnelCard}>
-        <Text style={styles.cardTitle}>Pipeline Breakdown</Text>
+        <Text style={styles.cardTitle}>Pipeline Status Breakdown</Text>
 
         <View style={styles.stageRow}>
           <View style={styles.stageHeader}>
-            <Text style={styles.stageName}>New Leads</Text>
+            <Text style={styles.stageName}>New</Text>
             <Text style={styles.stageCount}>{total - contacted}</Text>
           </View>
           <View style={styles.progressBar}>
             <View
               style={[
                 styles.progressFill,
-                { width: total > 0 ? `${((total - contacted) / total) * 100}%` : '0%', backgroundColor: '#059669' },
+                { width: total > 0 ? `${((total - contacted) / total) * 100}%` : '0%', backgroundColor: '#0F172A' },
               ]}
             />
           </View>
@@ -142,7 +140,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <View
               style={[
                 styles.progressFill,
-                { width: total > 0 ? `${(contacted / total) * 100}%` : '0%', backgroundColor: '#2563EB' },
+                { width: total > 0 ? `${(contacted / total) * 100}%` : '0%', backgroundColor: '#475569' },
               ]}
             />
           </View>
@@ -157,7 +155,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <View
               style={[
                 styles.progressFill,
-                { width: total > 0 ? `${(qualified / total) * 100}%` : '0%', backgroundColor: '#9333EA' },
+                { width: total > 0 ? `${(qualified / total) * 100}%` : '0%', backgroundColor: '#64748B' },
               ]}
             />
           </View>
@@ -172,7 +170,7 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
             <View
               style={[
                 styles.progressFill,
-                { width: total > 0 ? `${(closed / total) * 100}%` : '0%', backgroundColor: '#475569' },
+                { width: total > 0 ? `${(closed / total) * 100}%` : '0%', backgroundColor: '#94A3B8' },
               ]}
             />
           </View>
@@ -214,15 +212,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#EFF6FF',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
     borderRadius: 8,
   },
   backBtnText: {
     fontSize: 12,
     fontWeight: '700',
-    color: colors.primary,
+    color: '#0F172A',
   },
   heroCard: {
     backgroundColor: '#0F172A',
@@ -237,10 +235,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   heroIconBg: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: colors.primary,
+    width: 34,
+    height: 34,
+    borderRadius: 9,
+    backgroundColor: '#1E293B',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -271,7 +269,7 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
   },
   heroUnit: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
     color: '#94A3B8',
   },
@@ -279,7 +277,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: '#1E293B',
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
@@ -287,7 +285,7 @@ const styles = StyleSheet.create({
   heroBadgeText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#34D399',
+    color: '#E2E8F0',
   },
   grid: {
     flexDirection: 'row',
@@ -308,6 +306,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
+    backgroundColor: '#F1F5F9', // Clean neutral gray icon box
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
@@ -338,7 +337,7 @@ const styles = StyleSheet.create({
     ...shadows.sm,
   },
   cardTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '800',
     color: colors.textPrimary,
   },

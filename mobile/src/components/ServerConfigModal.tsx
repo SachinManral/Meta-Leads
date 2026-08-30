@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 import { colors, shadows } from '../theme/colors';
 import { ConnectionStatus } from '../types/lead';
 
@@ -102,9 +103,12 @@ export const ServerConfigModal: React.FC<ServerConfigModalProps> = ({
               </View>
 
               <View style={styles.helperBox}>
-                <Text style={styles.helperTitle}>💡 Tip for Physical Phones:</Text>
+                <View style={styles.helperHeaderRow}>
+                  <Feather name="info" size={13} color="#64748B" />
+                  <Text style={styles.helperTitle}>Physical Device Setup</Text>
+                </View>
                 <Text style={styles.helperText}>
-                  Use your computer's local Wi-Fi IP (e.g. http://192.168.1.50:4000) or an Ngrok tunnel URL.
+                  Connect to your computer's local Wi-Fi IP (e.g. http://192.168.1.4:4000) or an active Ngrok tunnel.
                 </Text>
               </View>
             </View>
@@ -235,11 +239,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderLight,
   },
+  helperHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 4,
+  },
   helperTitle: {
     fontSize: 12,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 4,
   },
   helperText: {
     fontSize: 11,

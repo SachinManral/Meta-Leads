@@ -112,8 +112,8 @@ const TabItem: React.FC<TabItemProps> = ({ icon, isActive, badge, onPress }) => 
       >
         <Ionicons
           name={icon}
-          size={isActive ? 22 : 22}
-          color={isActive ? '#0F172A' : '#94A3B8'}
+          size={isActive ? 22 : 21}
+          color={isActive ? '#0F172A' : 'rgba(255, 255, 255, 0.7)'}
         />
 
         {/* Live Badge Dot for Inbound Leads */}
@@ -143,20 +143,29 @@ const styles = StyleSheet.create({
     maxWidth: 390,
     height: 68,
     borderRadius: 34,
-    backgroundColor: '#0F172A', // Deep Obsidian Black like the user reference design
+    // Transparent Frosted Glass effect
+    backgroundColor: Platform.select({
+      ios: 'rgba(15, 23, 42, 0.75)',
+      android: 'rgba(15, 23, 42, 0.82)',
+      web: 'rgba(15, 23, 42, 0.76)',
+    }),
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.18)',
     paddingHorizontal: 10,
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 14 },
-        shadowOpacity: 0.28,
-        shadowRadius: 24,
+        shadowOffset: { width: 0, height: 16 },
+        shadowOpacity: 0.35,
+        shadowRadius: 28,
       },
       android: {
         elevation: 16,
       },
       web: {
-        boxShadow: '0 16px 36px rgba(15, 23, 42, 0.28), 0 4px 12px rgba(0, 0, 0, 0.08)',
+        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
       },
     }),
   },
@@ -178,19 +187,19 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#FFFFFF', // High-contrast White circular highlight matching reference
+    backgroundColor: '#FFFFFF', // High-contrast White circular highlight
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
+        shadowOpacity: 0.2,
         shadowRadius: 8,
       },
       android: {
         elevation: 6,
       },
       web: {
-        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
+        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
       },
     }),
   },
