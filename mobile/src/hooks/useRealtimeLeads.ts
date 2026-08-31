@@ -6,7 +6,7 @@ import { Platform, Vibration } from 'react-native';
 const DEFAULT_BACKEND_URL =
   Platform.OS === 'web'
     ? 'http://localhost:4000'
-    : 'https://feet-procedure-figure-ordering.trycloudflare.com';
+    : 'https://volunteer-shoes-crop-theorem.trycloudflare.com';
 
 export function useRealtimeLeads(customServerUrl?: string) {
   const [leads, setLeads] = useState<Lead[]>([]);

@@ -1,5 +1,47 @@
 [
   {
+    "id": "act_1788182275205_7zig",
+    "timestamp": "2026-08-31T13:17:55.205Z",
+    "type": "status_updated",
+    "message": "Lead inbox cleared by user"
+  },
+  {
+    "id": "act_1788182263979_5sjz",
+    "timestamp": "2026-08-31T13:17:43.979Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (api0oY...)",
+    "metadata": {
+      "socketId": "api0oYqMck1lr9UfAAAB",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788182228907_fdab",
+    "timestamp": "2026-08-31T13:17:08.907Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
+    "id": "act_1788182081297_hxun",
+    "timestamp": "2026-08-31T13:14:41.298Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (KoMrJv...)",
+    "metadata": {
+      "socketId": "KoMrJvrJFAaT6PzQAAAH",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788182040651_rh53",
+    "timestamp": "2026-08-31T13:14:00.653Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (mkwupC...)",
+    "metadata": {
+      "socketId": "mkwupCSMAdkzHKYyAAAD",
+      "totalClients": 1
+    }
+  },
+  {
     "id": "act_1788181146142_ta3c",
     "timestamp": "2026-08-31T12:59:06.144Z",
     "type": "status_updated",
