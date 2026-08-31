@@ -3,9 +3,9 @@ import crypto from 'crypto';
 import { config } from '../config/env';
 import { FormattedLead, MetaLeadGraphResponse, MetaLeadField, LeadTelemetry } from '../types/lead';
 import { socketService } from './socketService';
+import { storageService } from './storageService';
 
 class MetaService {
-  private processedLeadIds = new Set<string>();
   private mockCycleIndex = 0;
 
   private mockProfiles = [
@@ -116,7 +116,7 @@ class MetaService {
    * Checks if lead was already processed (Duplicate Protection)
    */
   public isDuplicate(leadgenId: string): boolean {
-    return this.processedLeadIds.has(leadgenId);
+    return storageService.isDuplicate(leadgenId);
   }
 
   /**
@@ -128,7 +128,6 @@ class MetaService {
     hmacVerified: boolean = true
   ): Promise<FormattedLead> {
     const isDuplicate = this.isDuplicate(leadgenId);
-    this.processedLeadIds.add(leadgenId);
 
     const pageToken = config.meta.pageAccessToken;
     const webhookReceivedAt = new Date(webhookStartTime).toISOString();
@@ -150,7 +149,7 @@ class MetaService {
         metadata: { leadgenId, latency: pipelineLatency },
       });
 
-      return this.generateMockLead(leadgenId, {
+      const lead = this.generateMockLead(leadgenId, {
         webhook_received_at: webhookReceivedAt,
         graph_api_fetched_at: graphFetchedAt,
         broadcast_at: new Date().toISOString(),
@@ -158,6 +157,7 @@ class MetaService {
         hmac_verified: hmacVerified,
         duplicate_protected: !isDuplicate,
       });
+      return storageService.saveLead(lead);
     }
 
     try {
@@ -183,7 +183,8 @@ class MetaService {
         duplicate_protected: !isDuplicate,
       };
 
-      return this.normalizeLeadData(response.data, telemetry);
+      const normalized = this.normalizeLeadData(response.data, telemetry);
+      return storageService.saveLead(normalized);
     } catch (error: unknown) {
       const axiosErr = error as AxiosError<{ error?: { message?: string } }>;
       const errorMsg = axiosErr.response?.data?.error?.message || axiosErr.message;
@@ -205,7 +206,8 @@ class MetaService {
         duplicate_protected: !isDuplicate,
       };
 
-      return this.generateMockLead(leadgenId, telemetry);
+      const fallbackLead = this.generateMockLead(leadgenId, telemetry);
+      return storageService.saveLead(fallbackLead);
     }
   }
 

@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Lead, ConnectionStatus, SystemActivityLog, LeadStatus, AppMode } from '../types/lead';
-import { Platform } from 'react-native';
+import { Platform, Vibration } from 'react-native';
 
 const DEFAULT_BACKEND_URL =
   Platform.OS === 'web'
     ? 'http://localhost:4000'
-    : 'https://innovative-journalist-lime-york.trycloudflare.com';
+    : 'https://feet-procedure-figure-ordering.trycloudflare.com';
 
 export function useRealtimeLeads(customServerUrl?: string) {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -15,6 +15,7 @@ export function useRealtimeLeads(customServerUrl?: string) {
   const [latestLead, setLatestLead] = useState<Lead | null>(null);
   const [activities, setActivities] = useState<SystemActivityLog[]>([]);
   const [appMode, setAppMode] = useState<AppMode>('demo');
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const socketRef = useRef<Socket | null>(null);
   const timersRef = useRef<Set<NodeJS.Timeout>>(new Set());
@@ -49,6 +50,12 @@ export function useRealtimeLeads(customServerUrl?: string) {
       setConnectionStatus('disconnected');
     });
 
+    // Initial Leads Synchronization (Instant Persistent Hydration)
+    socket.on('initial_leads', (initialLeads: Lead[]) => {
+      console.log(`[SocketHook] 📦 Received ${initialLeads.length} initial leads from server`);
+      setLeads(initialLeads);
+    });
+
     // Activity History Initial Sync
     socket.on('activity_history', (history: SystemActivityLog[]) => {
       setActivities(history);
@@ -75,9 +82,27 @@ export function useRealtimeLeads(customServerUrl?: string) {
       );
     });
 
+    // Cross-Client Notes Update Listener
+    socket.on('lead_notes_updated', (data: { leadId: string; notes: string }) => {
+      setLeads((currentLeads) =>
+        currentLeads.map((item) =>
+          item.id === data.leadId ? { ...item, notes: data.notes } : item
+        )
+      );
+    });
+
     // Real-time Lead Event Listener
     socket.on('new_lead', (newLead: Lead) => {
       console.log(`[SocketHook] ⚡ Received live lead:`, newLead.full_name);
+
+      // Tactile arrival vibration on physical device
+      if (Platform.OS !== 'web') {
+        try {
+          Vibration.vibrate([0, 90, 40, 90]);
+        } catch {
+          // Ignore vibration failures if permissions not granted
+        }
+      }
       
       const leadWithFlags: Lead = {
         ...newLead,
@@ -89,8 +114,12 @@ export function useRealtimeLeads(customServerUrl?: string) {
       setLatestLead(leadWithFlags);
 
       setLeads((prev) => {
-        // Deduplicate incoming leads by leadgen_id
-        const filtered = prev.filter((item) => item.leadgen_id !== leadWithFlags.leadgen_id);
+        const isSample = leadWithFlags.leadgen_id === '444444444444';
+        const filtered = prev.filter((item) => {
+          if (item.id === leadWithFlags.id) return false;
+          if (!isSample && item.leadgen_id === leadWithFlags.leadgen_id) return false;
+          return true;
+        });
         return [leadWithFlags, ...filtered];
       });
 
@@ -183,13 +212,44 @@ export function useRealtimeLeads(customServerUrl?: string) {
   }, []);
 
   /**
-   * Updates lead notes / remarks
+   * Updates lead notes / remarks and synchronizes to server
    */
   const updateLeadNotes = useCallback((leadId: string, notes: string) => {
     setLeads((prevLeads) =>
       prevLeads.map((lead) => (lead.id === leadId ? { ...lead, notes } : lead))
     );
-  }, []);
+
+    if (socketRef.current) {
+      socketRef.current.emit('update_lead_notes', { leadId, notes });
+    }
+
+    // Also persist via REST fallback
+    fetch(`${serverUrl}/api/leads/${leadId}/notes`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes }),
+    }).catch((err) => console.warn('[SocketHook] Note sync fallback notice:', err.message));
+  }, [serverUrl]);
+
+  /**
+   * Pull-to-refresh lead list from backend REST API
+   */
+  const refreshLeads = useCallback(async () => {
+    try {
+      setIsRefreshing(true);
+      const res = await fetch(`${serverUrl}/api/leads`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.leads)) {
+          setLeads(data.leads);
+        }
+      }
+    } catch (err: unknown) {
+      console.warn('[SocketHook] ⚠️ Refresh leads failed:', (err as Error).message);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [serverUrl]);
 
   const triggerMockLead = async () => {
     try {
@@ -207,10 +267,15 @@ export function useRealtimeLeads(customServerUrl?: string) {
     }
   };
 
-  const clearLeads = () => {
+  const clearLeads = useCallback(async () => {
     setLeads([]);
     setLatestLead(null);
-  };
+    try {
+      await fetch(`${serverUrl}/api/leads`, { method: 'DELETE' });
+    } catch (err) {
+      console.warn('[SocketHook] Clear leads API notice:', err);
+    }
+  }, [serverUrl]);
 
   return {
     leads,
@@ -222,6 +287,8 @@ export function useRealtimeLeads(customServerUrl?: string) {
     activities,
     appMode,
     setAppMode,
+    isRefreshing,
+    refreshLeads,
     updateLeadStatus,
     updateLeadNotes,
     triggerMockLead,

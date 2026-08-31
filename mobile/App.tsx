@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,10 +7,12 @@ import {
   StatusBar,
   Alert,
   Platform,
+  RefreshControl,
 } from 'react-native';
 import { colors } from './src/theme/colors';
 import { useRealtimeLeads } from './src/hooks/useRealtimeLeads';
 import { Header } from './src/components/Header';
+import { SearchFilterBar, FilterStatus } from './src/components/SearchFilterBar';
 import { LeadCard } from './src/components/LeadCard';
 import { LeadDetailModal } from './src/components/LeadDetailModal';
 import { ServerConfigModal } from './src/components/ServerConfigModal';
@@ -33,6 +35,8 @@ export default function App() {
     activities,
     appMode,
     setAppMode,
+    isRefreshing,
+    refreshLeads,
     updateLeadStatus,
     updateLeadNotes,
     triggerMockLead,
@@ -44,6 +48,8 @@ export default function App() {
   const [modalVisible, setModalVisible] = useState(false);
   const [serverModalVisible, setServerModalVisible] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState<FilterStatus>('all');
 
   const uncontactedCount = leads.filter((l) => l.status === 'new').length;
 
@@ -93,6 +99,25 @@ export default function App() {
     setActiveTab(tab);
   };
 
+  const filteredLeads = useMemo(() => {
+    return leads.filter((l) => {
+      // Status filter
+      if (selectedFilter !== 'all' && l.status !== selectedFilter) return false;
+      // Search query filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const nameMatch = l.full_name?.toLowerCase().includes(q);
+        const emailMatch = l.email?.toLowerCase().includes(q);
+        const phoneMatch = l.phone_number?.toLowerCase().includes(q);
+        const companyMatch = l.company_name?.toLowerCase().includes(q);
+        const formMatch = l.form_name?.toLowerCase().includes(q);
+        const serviceMatch = l.custom_fields && Object.values(l.custom_fields).some((v) => v.toLowerCase().includes(q));
+        return nameMatch || emailMatch || phoneMatch || companyMatch || formMatch || serviceMatch;
+      }
+      return true;
+    });
+  }, [leads, selectedFilter, searchQuery]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
@@ -137,9 +162,18 @@ export default function App() {
               isSimulating={isSimulating}
             />
 
+            {/* Instant Search & Status Filter Chips */}
+            <SearchFilterBar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedFilter={selectedFilter}
+              onSelectFilter={setSelectedFilter}
+              leads={leads}
+            />
+
             {/* Real-time Lead Inbox Stream */}
             <FlatList
-              data={leads}
+              data={filteredLeads}
               keyExtractor={(item) => item.id || item.leadgen_id}
               renderItem={({ item }) => (
                 <LeadCard
@@ -148,6 +182,14 @@ export default function App() {
                   onQuickStatusChange={handleUpdateStatus}
                 />
               )}
+              refreshControl={
+                <RefreshControl
+                  refreshing={isRefreshing}
+                  onRefresh={refreshLeads}
+                  tintColor={colors.primary}
+                  colors={[colors.primary]}
+                />
+              }
               contentContainerStyle={styles.listContent}
               showsVerticalScrollIndicator={false}
               ListEmptyComponent={

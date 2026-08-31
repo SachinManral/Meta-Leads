@@ -32,7 +32,7 @@ export const ServerConfigModal: React.FC<ServerConfigModalProps> = ({
   const [urlInput, setUrlInput] = useState(currentUrl);
 
   const presets = [
-    { label: 'Cloudflare Live Tunnel', url: 'https://innovative-journalist-lime-york.trycloudflare.com' },
+    { label: 'Cloudflare Live Tunnel', url: 'https://feet-procedure-figure-ordering.trycloudflare.com' },
     { label: 'This PC (Wi-Fi LAN)', url: 'http://10.10.167.97:4000' },
     { label: 'Localhost (Web/iOS)', url: 'http://localhost:4000' },
     { label: 'Android Emulator', url: 'http://10.0.2.2:4000' },

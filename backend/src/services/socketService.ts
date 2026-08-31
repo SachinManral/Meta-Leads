@@ -1,12 +1,11 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { Server as HTTPServer } from 'http';
 import { FormattedLead, SystemActivityLog, LeadStatus } from '../types/lead';
+import { storageService } from './storageService';
 
 class SocketService {
   private io: SocketIOServer | null = null;
   private connectedClientsCount: number = 0;
-  private recentActivities: SystemActivityLog[] = [];
-  private readonly MAX_ACTIVITIES = 30;
 
   public initialize(httpServer: HTTPServer, corsOrigin: string = '*'): SocketIOServer {
     this.io = new SocketIOServer(httpServer, {
@@ -27,9 +26,14 @@ class SocketService {
         totalClients: this.connectedClientsCount,
       });
 
-      // Send recent activity buffer to newly connected client
-      if (this.recentActivities.length > 0) {
-        socket.emit('activity_history', this.recentActivities);
+      // Synchronize full persistent lead history to newly connected client
+      const existingLeads = storageService.getLeads();
+      socket.emit('initial_leads', existingLeads);
+
+      // Send recent activity buffer
+      const recentActivities = storageService.getActivities();
+      if (recentActivities.length > 0) {
+        socket.emit('activity_history', recentActivities);
       }
 
       this.logActivity({
@@ -41,13 +45,25 @@ class SocketService {
       // Listen for client status updates (e.g. sales rep marked as Contacted)
       socket.on('update_lead_status', (data: { leadId: string; status: LeadStatus; contactedAt?: string; responseTimeSeconds?: number }) => {
         console.log(`[Socket] 🏷️ Lead ${data.leadId} status changed to "${data.status}"`);
+        
+        // Persist to disk
+        storageService.updateLeadStatus(data.leadId, data.status, data.contactedAt, data.responseTimeSeconds);
+
         this.logActivity({
           type: 'status_updated',
           message: `Lead ${data.leadId.substring(0, 10)} marked as "${data.status}"`,
           metadata: data,
         });
+
         // Sync across all connected devices
         this.io?.emit('lead_status_updated', data);
+      });
+
+      // Listen for notes updates
+      socket.on('update_lead_notes', (data: { leadId: string; notes: string }) => {
+        console.log(`[Socket] 📝 Lead ${data.leadId} notes updated`);
+        storageService.updateLeadNotes(data.leadId, data.notes);
+        this.io?.emit('lead_notes_updated', data);
       });
 
       socket.on('disconnect', (reason) => {
@@ -82,11 +98,7 @@ class SocketService {
       ...activity,
     };
 
-    this.recentActivities.unshift(entry);
-    if (this.recentActivities.length > this.MAX_ACTIVITIES) {
-      this.recentActivities.pop();
-    }
-
+    storageService.saveActivity(entry);
     this.io?.emit('system_activity', entry);
     return entry;
   }
@@ -96,7 +108,7 @@ class SocketService {
   }
 
   public getRecentActivities(): SystemActivityLog[] {
-    return this.recentActivities;
+    return storageService.getActivities();
   }
 }
 
