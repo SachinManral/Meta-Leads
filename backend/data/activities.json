@@ -1,0 +1,387 @@
+[
+  {
+    "id": "act_1788181146142_ta3c",
+    "timestamp": "2026-08-31T12:59:06.144Z",
+    "type": "status_updated",
+    "message": "Lead lead_17881 marked as \"contacted\"",
+    "metadata": {
+      "leadId": "lead_1788180361697",
+      "status": "contacted",
+      "contactedAt": "2026-08-31T12:59:05.390Z",
+      "responseTimeSeconds": 784
+    }
+  },
+  {
+    "id": "act_1788180540579_hn7u",
+    "timestamp": "2026-08-31T12:49:00.580Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (dYzM3U...)",
+    "metadata": {
+      "socketId": "dYzM3UNkhrovwHDDAAAB",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788180361336_vd3s",
+    "timestamp": "2026-08-31T12:46:01.336Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: lead_1788180361282)",
+    "metadata": {
+      "leadgenId": "lead_1788180361282",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180354792_uhz6",
+    "timestamp": "2026-08-31T12:45:54.792Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (zuSMd7...)",
+    "metadata": {
+      "socketId": "zuSMd73DUT89Gpu3AAAF",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788180346531_2kmq",
+    "timestamp": "2026-08-31T12:45:46.531Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Rohan Mehta\" delivered live (445ms)",
+    "metadata": {
+      "leadId": "lead_1788180346527",
+      "leadgenId": "lead_1788180345948",
+      "latency": 445
+    }
+  },
+  {
+    "id": "act_1788180346090_3i2c",
+    "timestamp": "2026-08-31T12:45:46.091Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: lead_1788180345948)",
+    "metadata": {
+      "leadgenId": "lead_1788180345948",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180198581_xgi8",
+    "timestamp": "2026-08-31T12:43:18.581Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Sneha Kulkarni\" delivered live (296ms)",
+    "metadata": {
+      "leadId": "lead_1788180198578",
+      "leadgenId": "444444444444",
+      "latency": 296
+    }
+  },
+  {
+    "id": "act_1788180198283_o2s0",
+    "timestamp": "2026-08-31T12:43:18.283Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180198197_xr0r",
+    "timestamp": "2026-08-31T12:43:18.197Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Aarav Patel\" delivered live (296ms)",
+    "metadata": {
+      "leadId": "lead_1788180198192",
+      "leadgenId": "444444444444",
+      "latency": 296
+    }
+  },
+  {
+    "id": "act_1788180197897_x48f",
+    "timestamp": "2026-08-31T12:43:17.897Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180197604_tlnm",
+    "timestamp": "2026-08-31T12:43:17.604Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Ananya Verma\" delivered live (334ms)",
+    "metadata": {
+      "leadId": "lead_1788180197597",
+      "leadgenId": "444444444444",
+      "latency": 334
+    }
+  },
+  {
+    "id": "act_1788180197541_znx6",
+    "timestamp": "2026-08-31T12:43:17.541Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Vikram Singh\" delivered live (285ms)",
+    "metadata": {
+      "leadId": "lead_1788180197536",
+      "leadgenId": "444444444444",
+      "latency": 285
+    }
+  },
+  {
+    "id": "act_1788180197264_s5sq",
+    "timestamp": "2026-08-31T12:43:17.264Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180197252_m1l6",
+    "timestamp": "2026-08-31T12:43:17.252Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180194736_jmjk",
+    "timestamp": "2026-08-31T12:43:14.736Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Priya Sharma\" delivered live (296ms)",
+    "metadata": {
+      "leadId": "lead_1788180194731",
+      "leadgenId": "444444444444",
+      "latency": 296
+    }
+  },
+  {
+    "id": "act_1788180194436_3z5e",
+    "timestamp": "2026-08-31T12:43:14.436Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180192916_ak40",
+    "timestamp": "2026-08-31T12:43:12.916Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Rohan Mehta\" delivered live (709ms)",
+    "metadata": {
+      "leadId": "lead_1788180192911",
+      "leadgenId": "444444444444",
+      "latency": 709
+    }
+  },
+  {
+    "id": "act_1788180192204_e2n6",
+    "timestamp": "2026-08-31T12:43:12.204Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180174592_mn2v",
+    "timestamp": "2026-08-31T12:42:54.592Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (vVpcxl...)",
+    "metadata": {
+      "socketId": "vVpcxl4lzf6WgPCKAAAD",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788180170679_7nhv",
+    "timestamp": "2026-08-31T12:42:50.679Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (O5k3Tv...)",
+    "metadata": {
+      "socketId": "O5k3TvH2HPdtEnZLAAAB",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788180017847_woo8",
+    "timestamp": "2026-08-31T12:40:17.847Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180008500_hu4h",
+    "timestamp": "2026-08-31T12:40:08.500Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Priya Sharma\" delivered live (285ms)",
+    "metadata": {
+      "leadId": "lead_1788180008494",
+      "leadgenId": "444444444444",
+      "latency": 285
+    }
+  },
+  {
+    "id": "act_1788180008210_0se3",
+    "timestamp": "2026-08-31T12:40:08.210Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788180006047_ufb1",
+    "timestamp": "2026-08-31T12:40:06.047Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Rohan Mehta\" delivered live (329ms)",
+    "metadata": {
+      "leadId": "lead_1788180006044",
+      "leadgenId": "444444444444",
+      "latency": 329
+    }
+  },
+  {
+    "id": "act_1788180005716_gcs9",
+    "timestamp": "2026-08-31T12:40:05.716Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788179984268_0mge",
+    "timestamp": "2026-08-31T12:39:44.268Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Sneha Kulkarni\" delivered live (345ms)",
+    "metadata": {
+      "leadId": "lead_1788179984265",
+      "leadgenId": "444444444444",
+      "latency": 345
+    }
+  },
+  {
+    "id": "act_1788179983922_wwvw",
+    "timestamp": "2026-08-31T12:39:43.923Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788179975506_mti0",
+    "timestamp": "2026-08-31T12:39:35.506Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Aarav Patel\" delivered live (1091ms)",
+    "metadata": {
+      "leadId": "lead_1788179975497",
+      "leadgenId": "444444444444",
+      "latency": 1091
+    }
+  },
+  {
+    "id": "act_1788179974432_00x8",
+    "timestamp": "2026-08-31T12:39:34.434Z",
+    "type": "webhook_received",
+    "message": "Meta webhook event received (Lead ID: 444444444444)",
+    "metadata": {
+      "leadgenId": "444444444444",
+      "hmacVerified": true
+    }
+  },
+  {
+    "id": "act_1788179904465_7j5s",
+    "timestamp": "2026-08-31T12:38:24.465Z",
+    "type": "status_updated",
+    "message": "Lead inbox cleared by user"
+  },
+  {
+    "id": "act_1788179887745_y38w",
+    "timestamp": "2026-08-31T12:38:07.745Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Ananya Verma\" delivered live (65ms)",
+    "metadata": {
+      "leadId": "lead_1788179887741",
+      "leadgenId": "test_6021749027",
+      "latency": 65
+    }
+  },
+  {
+    "id": "act_1788179882449_d785",
+    "timestamp": "2026-08-31T12:38:02.449Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Vikram Singh\" delivered live (66ms)",
+    "metadata": {
+      "leadId": "lead_1788179882445",
+      "leadgenId": "test_6393075483",
+      "latency": 66
+    }
+  },
+  {
+    "id": "act_1788179877019_qjd6",
+    "timestamp": "2026-08-31T12:37:57.020Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Priya Sharma\" delivered live (73ms)",
+    "metadata": {
+      "leadId": "lead_1788179877015",
+      "leadgenId": "test_9425515305",
+      "latency": 73
+    }
+  },
+  {
+    "id": "act_1788179874453_6qcs",
+    "timestamp": "2026-08-31T12:37:54.453Z",
+    "type": "lead_broadcast",
+    "message": "Lead \"Rohan Mehta\" delivered live (84ms)",
+    "metadata": {
+      "leadId": "lead_1788179874447",
+      "leadgenId": "test_8782036504",
+      "latency": 84
+    }
+  },
+  {
+    "id": "act_1788179835199_m0zf",
+    "timestamp": "2026-08-31T12:37:15.201Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
+    "id": "act_1788179663693_n0i3",
+    "timestamp": "2026-08-31T12:34:23.694Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (LoK7ob...)",
+    "metadata": {
+      "socketId": "LoK7obNwxY2q9E-SAAAD",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788179592138_ueri",
+    "timestamp": "2026-08-31T12:33:12.138Z",
+    "type": "client_connected",
+    "message": "Mobile client connected (4se05D...)",
+    "metadata": {
+      "socketId": "4se05DdzespiF_-8AAAB",
+      "totalClients": 1
+    }
+  },
+  {
+    "id": "act_1788179027527_rgy5",
+    "timestamp": "2026-08-31T12:23:47.527Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  }
+]

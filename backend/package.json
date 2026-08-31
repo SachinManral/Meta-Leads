@@ -7,6 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "test": "ts-node-dev --transpile-only tests/run_tests.ts",
     "simulate:webhook": "ts-node-dev --transpile-only scripts/simulate_webhook.ts"
   },
   "dependencies": {

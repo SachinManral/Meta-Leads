@@ -1,0 +1,239 @@
+[
+  {
+    "id": "lead_1788180361697",
+    "leadgen_id": "lead_1788180361282",
+    "created_time": "2026-08-31T12:46:01.697Z",
+    "full_name": "Priya Sharma",
+    "email": "priya.sharma@example.com",
+    "phone_number": "+91 9814399603",
+    "city": "Mumbai",
+    "company_name": "Fintech Solutions Ltd",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "AI Agent Integration",
+      "Budget Estimate": "$15,000 - $25,000",
+      "Preferred Contact Time": "Evening (5 PM - 8 PM)"
+    },
+    "status": "contacted",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:46:01.334Z",
+      "graph_api_fetched_at": "2026-08-31T12:46:01.697Z",
+      "broadcast_at": "2026-08-31T12:46:01.697Z",
+      "pipeline_latency_ms": 363,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:46:01.697Z",
+    "contacted_at": "2026-08-31T12:59:05.390Z",
+    "response_time_seconds": 784
+  },
+  {
+    "id": "lead_1788180346527",
+    "leadgen_id": "lead_1788180345948",
+    "created_time": "2026-08-31T12:45:46.527Z",
+    "full_name": "Rohan Mehta",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:45:46.082Z",
+      "graph_api_fetched_at": "2026-08-31T12:45:46.527Z",
+      "broadcast_at": "2026-08-31T12:45:46.527Z",
+      "pipeline_latency_ms": 445,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:45:46.527Z"
+  },
+  {
+    "id": "lead_1788180198578",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:43:18.578Z",
+    "full_name": "Sneha Kulkarni",
+    "email": "sneha.kulkarni@example.com",
+    "phone_number": "+91 9823019845",
+    "city": "Chennai",
+    "company_name": "Global EdTech Ventures",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "CRM Lead Automation & Webhooks",
+      "Budget Estimate": "$18,000 - $30,000",
+      "Preferred Contact Time": "Evening (4 PM - 7 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:43:18.282Z",
+      "graph_api_fetched_at": "2026-08-31T12:43:18.578Z",
+      "broadcast_at": "2026-08-31T12:43:18.578Z",
+      "pipeline_latency_ms": 296,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:43:18.578Z"
+  },
+  {
+    "id": "lead_1788180198192",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:43:18.192Z",
+    "full_name": "Aarav Patel",
+    "email": "aarav.patel@example.com",
+    "phone_number": "+91 9876543210",
+    "city": "Hyderabad",
+    "company_name": "Quantum Logistics",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Full-Stack Web App Development",
+      "Budget Estimate": "$10,000 - $20,000",
+      "Preferred Contact Time": "Morning (10 AM - 1 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:43:17.896Z",
+      "graph_api_fetched_at": "2026-08-31T12:43:18.192Z",
+      "broadcast_at": "2026-08-31T12:43:18.192Z",
+      "pipeline_latency_ms": 296,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:43:18.192Z"
+  },
+  {
+    "id": "lead_1788180197597",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:43:17.597Z",
+    "full_name": "Ananya Verma",
+    "email": "ananya.verma@example.com",
+    "phone_number": "+91 9892147820",
+    "city": "Pune",
+    "company_name": "Zeta HealthTech",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Cybersecurity Audit & Compliance",
+      "Budget Estimate": "$20,000 - $35,000",
+      "Preferred Contact Time": "Anytime"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:43:17.263Z",
+      "graph_api_fetched_at": "2026-08-31T12:43:17.597Z",
+      "broadcast_at": "2026-08-31T12:43:17.597Z",
+      "pipeline_latency_ms": 334,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:43:17.597Z"
+  },
+  {
+    "id": "lead_1788180197536",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:43:17.536Z",
+    "full_name": "Vikram Singh",
+    "email": "vikram.singh@example.com",
+    "phone_number": "+91 9887891413",
+    "city": "Delhi NCR",
+    "company_name": "Apex Retail Brands",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Mobile App Development",
+      "Budget Estimate": "$30,000 - $50,000",
+      "Preferred Contact Time": "Afternoon (2 PM - 5 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:43:17.251Z",
+      "graph_api_fetched_at": "2026-08-31T12:43:17.536Z",
+      "broadcast_at": "2026-08-31T12:43:17.536Z",
+      "pipeline_latency_ms": 285,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:43:17.536Z"
+  },
+  {
+    "id": "lead_1788180194731",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:43:14.731Z",
+    "full_name": "Priya Sharma",
+    "email": "priya.sharma@example.com",
+    "phone_number": "+91 9814399603",
+    "city": "Mumbai",
+    "company_name": "Fintech Solutions Ltd",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "AI Agent Integration",
+      "Budget Estimate": "$15,000 - $25,000",
+      "Preferred Contact Time": "Evening (5 PM - 8 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:43:14.435Z",
+      "graph_api_fetched_at": "2026-08-31T12:43:14.731Z",
+      "broadcast_at": "2026-08-31T12:43:14.731Z",
+      "pipeline_latency_ms": 296,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:43:14.731Z"
+  },
+  {
+    "id": "lead_1788180192911",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:43:12.911Z",
+    "full_name": "Rohan Mehta",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:43:12.202Z",
+      "graph_api_fetched_at": "2026-08-31T12:43:12.911Z",
+      "broadcast_at": "2026-08-31T12:43:12.911Z",
+      "pipeline_latency_ms": 709,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T12:43:12.911Z"
+  },
+  {
+    "id": "lead_1788180018201",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T12:40:18.201Z",
+    "full_name": "Vikram Singh",
+    "email": "vikram.singh@example.com",
+    "phone_number": "+91 9887891413",
+    "city": "Delhi NCR",
+    "company_name": "Apex Retail Brands",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Mobile App Development",
+      "Budget Estimate": "$30,000 - $50,000",
+      "Preferred Contact Time": "Afternoon (2 PM - 5 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T12:40:17.846Z",
+      "graph_api_fetched_at": "2026-08-31T12:40:18.201Z",
+      "broadcast_at": "2026-08-31T12:40:18.201Z",
+      "pipeline_latency_ms": 355,
+      "hmac_verified": true,
+      "duplicate_protected": false
+    },
+    "received_at": "2026-08-31T12:40:18.202Z",
+    "notes": "Kemchoo"
+  }
+]
