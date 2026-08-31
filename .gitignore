@@ -15,6 +15,9 @@ mobile/.env.*
 
 # Video Recordings & Large Media (Loom recordings, screen captures, executables)
 *.exe
+*.exe.*
+.ngrok*
+cloudflared*
 *.mp4
 *.mov
 *.avi

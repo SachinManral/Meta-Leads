@@ -18,3 +18,9 @@ npm-debug.log*
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Executables & Tunneling Utilities
+*.exe
+*.exe.*
+.ngrok*
+cloudflared*
