@@ -1,1 +1,80 @@
-[]
+[
+  {
+    "id": "lead_1788182519542",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T13:21:59.542Z",
+    "full_name": "Vikram Singh",
+    "email": "vikram.singh@example.com",
+    "phone_number": "+91 9887891413",
+    "city": "Delhi NCR",
+    "company_name": "Apex Retail Brands",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Mobile App Development",
+      "Budget Estimate": "$30,000 - $50,000",
+      "Preferred Contact Time": "Afternoon (2 PM - 5 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T13:21:59.119Z",
+      "graph_api_fetched_at": "2026-08-31T13:21:59.542Z",
+      "broadcast_at": "2026-08-31T13:21:59.542Z",
+      "pipeline_latency_ms": 423,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T13:21:59.542Z"
+  },
+  {
+    "id": "lead_1788182514086",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T13:21:54.086Z",
+    "full_name": "Priya Sharma",
+    "email": "priya.sharma@example.com",
+    "phone_number": "+91 9814399603",
+    "city": "Mumbai",
+    "company_name": "Fintech Solutions Ltd",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "AI Agent Integration",
+      "Budget Estimate": "$15,000 - $25,000",
+      "Preferred Contact Time": "Evening (5 PM - 8 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T13:21:53.732Z",
+      "graph_api_fetched_at": "2026-08-31T13:21:54.086Z",
+      "broadcast_at": "2026-08-31T13:21:54.086Z",
+      "pipeline_latency_ms": 354,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T13:21:54.086Z"
+  },
+  {
+    "id": "lead_1788182509474",
+    "leadgen_id": "444444444444",
+    "created_time": "2026-08-31T13:21:49.474Z",
+    "full_name": "Rohan Mehta",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "new",
+    "telemetry": {
+      "webhook_received_at": "2026-08-31T13:21:48.677Z",
+      "graph_api_fetched_at": "2026-08-31T13:21:49.473Z",
+      "broadcast_at": "2026-08-31T13:21:49.474Z",
+      "pipeline_latency_ms": 797,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-08-31T13:21:49.474Z"
+  }
+]
