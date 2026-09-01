@@ -122,14 +122,12 @@ export default function App() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={colors.surface} />
       <View style={styles.container}>
-        {/* Floating Live Arrival Toast Banner */}
         <LiveToastAlert
           lead={latestLead}
           onPress={handleOpenDetails}
           onDismiss={dismissLatestLead}
         />
 
-        {/* Dynamic Content Views */}
         {activeTab === 'analytics' ? (
           <AnalyticsView
             leads={leads}
@@ -149,7 +147,6 @@ export default function App() {
           />
         ) : (
           <>
-            {/* Top Header */}
             <Header
               status={connectionStatus}
               totalLeads={leads.length}
@@ -162,7 +159,6 @@ export default function App() {
               isSimulating={isSimulating}
             />
 
-            {/* Instant Search & Status Filter Chips */}
             <SearchFilterBar
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -171,7 +167,6 @@ export default function App() {
               leads={leads}
             />
 
-            {/* Real-time Lead Inbox Stream */}
             <FlatList
               data={filteredLeads}
               keyExtractor={(item) => item.id || item.leadgen_id}
@@ -199,14 +194,12 @@ export default function App() {
           </>
         )}
 
-        {/* High-End Floating iOS Transparent Glass Capsule Dock */}
         <BottomTabBar
           activeTab={activeTab}
           onSelectTab={handleSelectTab}
           uncontactedBadgeCount={uncontactedCount}
         />
 
-        {/* Lead Detail & Technical Inspector Modal */}
         <LeadDetailModal
           visible={modalVisible}
           lead={selectedLead}
@@ -215,7 +208,6 @@ export default function App() {
           onSaveNotes={handleSaveNotes}
         />
 
-        {/* Server Connection Config Modal */}
         <ServerConfigModal
           visible={serverModalVisible}
           currentUrl={serverUrl}
