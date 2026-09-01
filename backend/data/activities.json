@@ -1,5 +1,11 @@
 [
   {
+    "id": "act_1788276924243_ryog",
+    "timestamp": "2026-09-01T15:35:24.243Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
     "id": "act_1788275873459_z0hw",
     "timestamp": "2026-09-01T15:17:53.459Z",
     "type": "signature_verified",
@@ -473,17 +479,6 @@
       "leadId": "lead_1788262164912",
       "leadgenId": "test_5889955472",
       "latency": 66
-    }
-  },
-  {
-    "id": "act_1788262163583_ury3",
-    "timestamp": "2026-09-01T11:29:23.584Z",
-    "type": "lead_broadcast",
-    "message": "Lead \"Sneha Kulkarni\" delivered live (48ms)",
-    "metadata": {
-      "leadId": "lead_1788262163578",
-      "leadgenId": "test_1980947470",
-      "latency": 48
     }
   }
 ]
