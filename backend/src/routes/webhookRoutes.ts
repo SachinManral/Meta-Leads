@@ -5,10 +5,7 @@ import { MetaWebhookPayload } from '../types/lead';
 
 const router = Router();
 
-/**
- * GET /webhook
- * Verification handshake endpoint for Meta Webhook setup
- */
+// Verification endpoint for Meta webhook setup
 router.get('/', (req: Request, res: Response): void => {
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
@@ -23,29 +20,26 @@ router.get('/', (req: Request, res: Response): void => {
   res.status(403).send('Forbidden: Token mismatch or invalid mode.');
 });
 
-/**
- * POST /webhook
- * Real-time receiver for Meta leadgen webhook events
- */
+// Receiver for Meta leadgen webhook events
 router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const rawBody = req.rawBody || JSON.stringify(req.body);
     const signature = req.headers['x-hub-signature-256'] as string | undefined;
 
-    // Cryptographic validation of Meta HMAC signature
+    // Validate HMAC signature
     const isValid = metaService.verifySignature(rawBody, signature);
     if (!isValid) {
-      console.warn('[Webhook] ⚠️ Invalid X-Hub-Signature-256 header.');
+      console.warn('[Webhook] Invalid signature header');
       res.status(401).json({ error: 'Invalid HMAC signature' });
       return;
     }
 
-    // Immediately acknowledge receipt with 200 OK to Meta to avoid retry storms
+    // Acknowledge immediately to prevent retries
     res.status(200).send('EVENT_RECEIVED');
 
     const startTime = Date.now();
     const body: MetaWebhookPayload = req.body;
-    console.log('[Webhook] 📬 Received valid webhook payload from Meta');
+    console.log('[Webhook] Received payload from Meta');
 
     if (body.object === 'page' && Array.isArray(body.entry)) {
       for (const entry of body.entry) {
@@ -54,12 +48,9 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
         for (const change of entry.changes) {
           if (change.field === 'leadgen' && change.value?.leadgen_id) {
             const leadgenId = change.value.leadgen_id;
-            console.log(`[Webhook] 🎯 Processing Leadgen Event: leadgen_id=${leadgenId}`);
+            console.log(`[Webhook] Processing leadgen_id: ${leadgenId}`);
 
-            // Fetch full lead information from Meta Graph API with timing telemetry
             const formattedLead = await metaService.fetchLeadDetails(leadgenId, startTime, isValid);
-
-            // Broadcast instantly to all connected mobile clients over WebSockets
             socketService.broadcastNewLead(formattedLead);
           }
         }
@@ -67,7 +58,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     }
   } catch (error: unknown) {
     const err = error as Error;
-    console.error('[Webhook] ❌ Error processing webhook event:', err.message);
+    console.error('[Webhook] Error processing event:', err.message);
   }
 });
 

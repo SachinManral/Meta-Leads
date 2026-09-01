@@ -7,10 +7,7 @@ import { LeadStatus } from '../types/lead';
 
 const router = Router();
 
-/**
- * GET /api/health
- * System health and connected clients count
- */
+// Health check
 router.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'ok',
@@ -22,10 +19,7 @@ router.get('/health', (req: Request, res: Response) => {
   });
 });
 
-/**
- * GET /api/leads
- * Returns all persisted leads with optional status and search filtering
- */
+// List leads with optional status/search filters
 router.get('/leads', (req: Request, res: Response) => {
   const status = req.query.status as LeadStatus | undefined;
   const search = req.query.search as string | undefined;
@@ -37,10 +31,7 @@ router.get('/leads', (req: Request, res: Response) => {
   });
 });
 
-/**
- * GET /api/leads/export
- * Exports leads in CSV format for CRM / Excel ingestion
- */
+// Export leads as CSV
 router.get('/leads/export', (req: Request, res: Response) => {
   const leads = storageService.getLeads();
 
@@ -66,10 +57,7 @@ router.get('/leads/export', (req: Request, res: Response) => {
   res.status(200).send(csv);
 });
 
-/**
- * GET /api/leads/:id
- * Fetches a single lead by ID
- */
+// Get lead by ID
 router.get('/leads/:id', (req: Request, res: Response) => {
   const lead = storageService.getLeadById(req.params.id);
   if (!lead) {
@@ -79,10 +67,7 @@ router.get('/leads/:id', (req: Request, res: Response) => {
   res.json({ lead });
 });
 
-/**
- * PATCH /api/leads/:id/status
- * Updates lead status and syncs across all connected devices
- */
+// Update lead status
 router.patch('/leads/:id/status', (req: Request, res: Response) => {
   const { status, contactedAt, responseTimeSeconds } = req.body;
   if (!status) {
@@ -96,7 +81,6 @@ router.patch('/leads/:id/status', (req: Request, res: Response) => {
     return;
   }
 
-  // Broadcast to all connected socket clients
   socketService.logActivity({
     type: 'status_updated',
     message: `Lead ${updated.id.substring(0, 10)} marked as "${status}"`,
@@ -106,10 +90,7 @@ router.patch('/leads/:id/status', (req: Request, res: Response) => {
   res.json({ lead: updated });
 });
 
-/**
- * PATCH /api/leads/:id/notes
- * Updates internal notes on a lead
- */
+// Update lead notes
 router.patch('/leads/:id/notes', (req: Request, res: Response) => {
   const { notes } = req.body;
   const updated = storageService.updateLeadNotes(req.params.id, notes || '');
@@ -120,10 +101,7 @@ router.patch('/leads/:id/notes', (req: Request, res: Response) => {
   res.json({ lead: updated });
 });
 
-/**
- * DELETE /api/leads
- * Clears all persisted leads
- */
+// Clear all leads
 router.delete('/leads', (req: Request, res: Response) => {
   storageService.clearLeads();
   socketService.logActivity({
@@ -133,20 +111,14 @@ router.delete('/leads', (req: Request, res: Response) => {
   res.json({ message: 'All leads cleared successfully' });
 });
 
-/**
- * GET /api/activities
- * Returns recent system activity events
- */
+// Recent activity events
 router.get('/activities', (req: Request, res: Response) => {
   res.json({
     activities: storageService.getActivities(),
   });
 });
 
-/**
- * POST /api/simulate-lead
- * Standalone mock endpoint for local debugging and quick test demo
- */
+// Simulation endpoint for test demo
 router.post('/simulate-lead', (req: Request, res: Response) => {
   const customData = req.body || {};
   const mockLead = metaService.generateMockLead(customData.leadgen_id);
@@ -155,10 +127,7 @@ router.post('/simulate-lead', (req: Request, res: Response) => {
   if (customData.email) mockLead.email = customData.email;
   if (customData.phone_number) mockLead.phone_number = customData.phone_number;
 
-  // Persist to disk
   storageService.saveLead(mockLead);
-
-  // Broadcast to all active phone/simulator screens
   socketService.broadcastNewLead(mockLead);
 
   res.status(201).json({
