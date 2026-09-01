@@ -92,12 +92,10 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
     >
       <View style={styles.overlay}>
         <SafeAreaView style={styles.modalContent}>
-          {/* Native Drag Handle */}
           <View style={styles.dragHandleContainer}>
             <View style={styles.dragHandle} />
           </View>
 
-          {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerTitleGroup}>
               <Text style={styles.title} numberOfLines={1}>
@@ -116,7 +114,6 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
           </View>
 
           <ScrollView style={styles.scrollArea} contentContainerStyle={styles.scrollContent}>
-            {/* Quick Action Dialers */}
             <View style={styles.actionRow}>
               <TouchableOpacity style={styles.callAction} onPress={handleCall} activeOpacity={0.8}>
                 <Ionicons name="call" size={16} color="#FFFFFF" />
@@ -134,7 +131,6 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* Lead Status & Workflow Lifecycle */}
             <View style={styles.sectionCard}>
               <View style={styles.sectionHeaderRow}>
                 <Ionicons name="bookmark-outline" size={15} color={colors.textPrimary} />
@@ -179,7 +175,6 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
               ) : null}
             </View>
 
-            {/* Contact Details */}
             <View style={styles.sectionCard}>
               <View style={styles.sectionHeaderRow}>
                 <Ionicons name="person-outline" size={15} color={colors.textPrimary} />
@@ -216,7 +211,6 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
               )}
             </View>
 
-            {/* Form Responses */}
             {lead.custom_fields && Object.keys(lead.custom_fields).length > 0 && (
               <View style={styles.sectionCard}>
                 <View style={styles.sectionHeaderRow}>
@@ -233,7 +227,6 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
               </View>
             )}
 
-            {/* Internal Sales Notes Editor */}
             <View style={styles.sectionCard}>
               <View style={styles.sectionHeaderRow}>
                 <Ionicons name="create-outline" size={15} color={colors.textPrimary} />
@@ -266,7 +259,6 @@ export const LeadDetailModal: React.FC<LeadDetailModalProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* Collapsible Technical Details */}
             <View style={styles.technicalCard}>
               <TouchableOpacity
                 style={styles.technicalHeader}

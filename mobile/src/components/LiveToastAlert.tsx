@@ -33,7 +33,6 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
         useNativeDriver: Platform.OS !== 'web',
       }).start();
 
-      // Auto dismiss after 6 seconds
       const timer = setTimeout(() => {
         onDismiss();
       }, 6000);
@@ -71,7 +70,6 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
         onPress={() => onPress(lead)}
         activeOpacity={0.92}
       >
-        {/* Left: Meta App Icon with Glowing Green Dot */}
         <View style={styles.appIconWrapper}>
           <View style={styles.appIcon}>
             <Ionicons name="logo-facebook" size={18} color="#FFFFFF" />
@@ -79,7 +77,6 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
           <View style={styles.livePulseDot} />
         </View>
 
-        {/* Center: Push Notification Content */}
         <View style={styles.contentColumn}>
           <View style={styles.appMetaRow}>
             <Text style={styles.appMetaText}>META LEAD ADS</Text>
@@ -96,7 +93,6 @@ export const LiveToastAlert: React.FC<LiveToastAlertProps> = ({
           </Text>
         </View>
 
-        {/* Right: Latency Badge & Dismiss Button */}
         <View style={styles.rightActions}>
           <View style={styles.latencyPill}>
             <Ionicons name="flash" size={10} color="#10B981" />
