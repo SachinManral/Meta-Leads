@@ -28,7 +28,7 @@ export const DeliveryTrace: React.FC<DeliveryTraceProps> = ({ telemetry }) => {
       }),
     ]).start();
 
-    // Fast, crisp sequential pipeline transitions (<450ms total)
+    // Sequential pipeline steps
     const t1 = setTimeout(() => setStep(2), 100);
     const t2 = setTimeout(() => setStep(3), 240);
     const t3 = setTimeout(() => setStep(4), 400);
@@ -62,7 +62,6 @@ export const DeliveryTrace: React.FC<DeliveryTraceProps> = ({ telemetry }) => {
       </View>
 
       <View style={styles.stepsRow}>
-        {/* Step 1: Meta Event */}
         <View style={styles.stepItem}>
           <View style={[styles.stepDot, step >= 1 && styles.stepDotDone]}>
             <Ionicons name="checkmark" size={10} color="#FFFFFF" />
@@ -74,7 +73,6 @@ export const DeliveryTrace: React.FC<DeliveryTraceProps> = ({ telemetry }) => {
 
         <View style={[styles.stepLine, step >= 2 && styles.stepLineActive]} />
 
-        {/* Step 2: Webhook HMAC */}
         <View style={styles.stepItem}>
           <View style={[styles.stepDot, step >= 2 && styles.stepDotDone]}>
             {step >= 2 ? (
@@ -90,7 +88,6 @@ export const DeliveryTrace: React.FC<DeliveryTraceProps> = ({ telemetry }) => {
 
         <View style={[styles.stepLine, step >= 3 && styles.stepLineActive]} />
 
-        {/* Step 3: Graph API */}
         <View style={styles.stepItem}>
           <View style={[styles.stepDot, step >= 3 && styles.stepDotDone]}>
             {step >= 3 ? (
@@ -106,7 +103,6 @@ export const DeliveryTrace: React.FC<DeliveryTraceProps> = ({ telemetry }) => {
 
         <View style={[styles.stepLine, step >= 4 && styles.stepLineActive]} />
 
-        {/* Step 4: Live Sync */}
         <View style={styles.stepItem}>
           <View style={[styles.stepDot, step >= 4 && styles.stepDotDone]}>
             {step >= 4 ? (

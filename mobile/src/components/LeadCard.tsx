@@ -172,10 +172,8 @@ export const LeadCard: React.FC<LeadCardProps> = React.memo(({
         onPress={() => onPressDetails(lead)}
         activeOpacity={0.92}
       >
-        {/* Real-time Delivery Trace Header (Active on newly arrived lead) */}
         {lead.showTrace && <DeliveryTrace telemetry={lead.telemetry} />}
 
-        {/* Top Meta Strip: Freshness, Latency & Status Pill */}
         <View style={styles.metaRow}>
           <View style={styles.freshnessGroup}>
             <Feather name="clock" size={12} color={colors.textSecondary} />
@@ -204,7 +202,6 @@ export const LeadCard: React.FC<LeadCardProps> = React.memo(({
           </TouchableOpacity>
         </View>
 
-        {/* Main Header: Avatar, Name & Key Interest */}
         <View style={styles.mainInfoRow}>
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>{getInitials(lead.full_name)}</Text>
@@ -228,7 +225,6 @@ export const LeadCard: React.FC<LeadCardProps> = React.memo(({
           </View>
         </View>
 
-        {/* Speed to Lead Metric */}
         {lead.response_time_seconds ? (
           <View style={styles.speedToLeadPill}>
             <Ionicons name="flash" size={12} color={colors.primary} />
@@ -238,7 +234,6 @@ export const LeadCard: React.FC<LeadCardProps> = React.memo(({
           </View>
         ) : null}
 
-        {/* Qualification Summary Card */}
         <View style={styles.summarySection}>
           <View style={styles.summaryItem}>
             <View style={styles.summaryLabelGroup}>
@@ -284,7 +279,6 @@ export const LeadCard: React.FC<LeadCardProps> = React.memo(({
           ) : null}
         </View>
 
-        {/* Quick Action Button Bar: Call, SMS, Email, Details */}
         <View style={styles.actionsBar}>
           <TouchableOpacity style={styles.callButton} onPress={handleCall} activeOpacity={0.7}>
             <Ionicons name="call" size={13} color={colors.primary} />
