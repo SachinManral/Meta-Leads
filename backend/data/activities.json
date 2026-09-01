@@ -1,5 +1,35 @@
 [
   {
+    "id": "act_1788275873459_z0hw",
+    "timestamp": "2026-09-01T15:17:53.459Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
+    "id": "act_1788275049750_tmec",
+    "timestamp": "2026-09-01T15:04:09.750Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
+    "id": "act_1788274799569_ptfm",
+    "timestamp": "2026-09-01T14:59:59.569Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
+    "id": "act_1788265863523_9sts",
+    "timestamp": "2026-09-01T12:31:03.523Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
+    "id": "act_1788264985337_3gly",
+    "timestamp": "2026-09-01T12:16:25.338Z",
+    "type": "signature_verified",
+    "message": "Meta Webhook verification challenge accepted (200 OK)"
+  },
+  {
     "id": "act_1788263855149_i8rj",
     "timestamp": "2026-09-01T11:57:35.149Z",
     "type": "status_updated",
@@ -454,54 +484,6 @@
       "leadId": "lead_1788262163578",
       "leadgenId": "test_1980947470",
       "latency": 48
-    }
-  },
-  {
-    "id": "act_1788262161470_at88",
-    "timestamp": "2026-09-01T11:29:21.470Z",
-    "type": "lead_broadcast",
-    "message": "Lead \"Aarav Patel\" delivered live (79ms)",
-    "metadata": {
-      "leadId": "lead_1788262161459",
-      "leadgenId": "test_6621589934",
-      "latency": 79
-    }
-  },
-  {
-    "id": "act_1788262152828_tugw",
-    "timestamp": "2026-09-01T11:29:12.831Z",
-    "type": "client_connected",
-    "message": "Mobile client connected (5xz2V_...)",
-    "metadata": {
-      "socketId": "5xz2V_H8nrtedeL0AAAO",
-      "totalClients": 1
-    }
-  },
-  {
-    "id": "act_1788261865827_auhd",
-    "timestamp": "2026-09-01T11:24:25.827Z",
-    "type": "status_updated",
-    "message": "Lead inbox cleared by user"
-  },
-  {
-    "id": "act_1788261861024_zxfz",
-    "timestamp": "2026-09-01T11:24:21.025Z",
-    "type": "lead_broadcast",
-    "message": "Lead \"Ananya Verma\" delivered live (357ms)",
-    "metadata": {
-      "leadId": "lead_1788261861020",
-      "leadgenId": "444444444444",
-      "latency": 357
-    }
-  },
-  {
-    "id": "act_1788261860665_reee",
-    "timestamp": "2026-09-01T11:24:20.665Z",
-    "type": "webhook_received",
-    "message": "Meta webhook event received (Lead ID: 444444444444)",
-    "metadata": {
-      "leadgenId": "444444444444",
-      "hmacVerified": true
     }
   }
 ]

@@ -1,5 +1,150 @@
 [
   {
+    "id": "lead_1788275873468",
+    "leadgen_id": "test_1788275873468",
+    "created_time": "2026-09-01T15:17:53.468Z",
+    "full_name": "Test Deduplication User",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "contacted",
+    "telemetry": {
+      "webhook_received_at": "2026-09-01T15:17:53.468Z",
+      "graph_api_fetched_at": "2026-09-01T15:17:53.468Z",
+      "broadcast_at": "2026-09-01T15:17:53.468Z",
+      "pipeline_latency_ms": 60,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-09-01T15:17:53.468Z",
+    "contacted_at": "2026-09-01T15:17:53.471Z",
+    "response_time_seconds": 45,
+    "notes": "Spoke with client. Very interested in enterprise plan."
+  },
+  {
+    "id": "lead_1788275049757",
+    "leadgen_id": "test_1788275049757",
+    "created_time": "2026-09-01T15:04:09.757Z",
+    "full_name": "Test Deduplication User",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "contacted",
+    "telemetry": {
+      "webhook_received_at": "2026-09-01T15:04:09.757Z",
+      "graph_api_fetched_at": "2026-09-01T15:04:09.757Z",
+      "broadcast_at": "2026-09-01T15:04:09.757Z",
+      "pipeline_latency_ms": 50,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-09-01T15:04:09.757Z",
+    "contacted_at": "2026-09-01T15:04:09.760Z",
+    "response_time_seconds": 45,
+    "notes": "Spoke with client. Very interested in enterprise plan."
+  },
+  {
+    "id": "lead_1788274799575",
+    "leadgen_id": "test_1788274799575",
+    "created_time": "2026-09-01T14:59:59.575Z",
+    "full_name": "Test Deduplication User",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "contacted",
+    "telemetry": {
+      "webhook_received_at": "2026-09-01T14:59:59.575Z",
+      "graph_api_fetched_at": "2026-09-01T14:59:59.575Z",
+      "broadcast_at": "2026-09-01T14:59:59.575Z",
+      "pipeline_latency_ms": 68,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-09-01T14:59:59.575Z",
+    "contacted_at": "2026-09-01T14:59:59.581Z",
+    "response_time_seconds": 45,
+    "notes": "Spoke with client. Very interested in enterprise plan."
+  },
+  {
+    "id": "lead_1788265863535",
+    "leadgen_id": "test_1788265863534",
+    "created_time": "2026-09-01T12:31:03.535Z",
+    "full_name": "Test Deduplication User",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "contacted",
+    "telemetry": {
+      "webhook_received_at": "2026-09-01T12:31:03.534Z",
+      "graph_api_fetched_at": "2026-09-01T12:31:03.534Z",
+      "broadcast_at": "2026-09-01T12:31:03.534Z",
+      "pipeline_latency_ms": 83,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-09-01T12:31:03.535Z",
+    "contacted_at": "2026-09-01T12:31:03.539Z",
+    "response_time_seconds": 45,
+    "notes": "Spoke with client. Very interested in enterprise plan."
+  },
+  {
+    "id": "lead_1788264985343",
+    "leadgen_id": "test_1788264985343",
+    "created_time": "2026-09-01T12:16:25.343Z",
+    "full_name": "Test Deduplication User",
+    "email": "rohan.mehta@example.com",
+    "phone_number": "+91 9840550427",
+    "city": "Bengaluru",
+    "company_name": "Nova Cloud Systems",
+    "form_name": "Meta Ads Real-time Lead Form",
+    "custom_fields": {
+      "Interested Service": "Enterprise Cloud Migration",
+      "Budget Estimate": "$25,000 - $40,000",
+      "Preferred Contact Time": "Morning (9 AM - 12 PM)"
+    },
+    "status": "contacted",
+    "telemetry": {
+      "webhook_received_at": "2026-09-01T12:16:25.343Z",
+      "graph_api_fetched_at": "2026-09-01T12:16:25.343Z",
+      "broadcast_at": "2026-09-01T12:16:25.343Z",
+      "pipeline_latency_ms": 56,
+      "hmac_verified": true,
+      "duplicate_protected": true
+    },
+    "received_at": "2026-09-01T12:16:25.343Z",
+    "contacted_at": "2026-09-01T12:16:25.345Z",
+    "response_time_seconds": 45,
+    "notes": "Spoke with client. Very interested in enterprise plan."
+  },
+  {
     "id": "lead_1788263852160",
     "leadgen_id": "444444444444",
     "created_time": "2026-09-01T11:57:32.160Z",

@@ -26,7 +26,7 @@ class StorageService {
       }
     } catch (err: unknown) {
       const error = err as Error;
-      console.error('[StorageService] ❌ Failed to create data directory:', error.message);
+      console.error('[StorageService] Failed to create data directory:', error.message);
     }
   }
 
@@ -39,19 +39,19 @@ class StorageService {
           if (l.leadgen_id) this.processedLeadIds.add(l.leadgen_id);
           if (l.id) this.processedLeadIds.add(l.id);
         });
-        console.log(`[StorageService] 📂 Loaded ${this.leads.length} persisted leads from disk.`);
+        console.log(`[StorageService] Loaded ${this.leads.length} persisted leads from disk`);
       }
 
       if (fs.existsSync(this.activitiesFile)) {
         const raw = fs.readFileSync(this.activitiesFile, 'utf-8');
         this.activities = JSON.parse(raw);
-        console.log(`[StorageService] 📂 Loaded ${this.activities.length} persisted activity logs.`);
+        console.log(`[StorageService] Loaded ${this.activities.length} persisted activity logs`);
       }
 
       this.isInitialized = true;
     } catch (err: unknown) {
       const error = err as Error;
-      console.warn('[StorageService] ⚠️ Error loading persisted data, starting fresh:', error.message);
+      console.warn('[StorageService] Error loading persisted data, starting fresh:', error.message);
       this.leads = [];
       this.activities = [];
     }
@@ -64,7 +64,7 @@ class StorageService {
       fs.renameSync(tempPath, this.leadsFile);
     } catch (err: unknown) {
       const error = err as Error;
-      console.error('[StorageService] ❌ Failed to persist leads:', error.message);
+      console.error('[StorageService] Failed to persist leads:', error.message);
     }
   }
 
@@ -75,7 +75,7 @@ class StorageService {
       fs.renameSync(tempPath, this.activitiesFile);
     } catch (err: unknown) {
       const error = err as Error;
-      console.error('[StorageService] ❌ Failed to persist activities:', error.message);
+      console.error('[StorageService] Failed to persist activities:', error.message);
     }
   }
 
