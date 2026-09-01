@@ -18,10 +18,10 @@ declare global {
 const app = express();
 const server = http.createServer(app);
 
-// Security & Middleware Configuration
+// Middleware
 app.use(cors({ origin: config.corsOrigin }));
 
-// Preserve raw body buffer for HMAC-SHA256 signature verification
+// Preserve raw body for webhook HMAC signature verification
 app.use(
   express.json({
     verify: (req: Request, _res: Response, buf: Buffer) => {
@@ -31,10 +31,9 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true }));
 
-// Initialize WebSocket Service (Socket.io)
 socketService.initialize(server, config.corsOrigin);
 
-// Root Health & System Discovery Route
+// Health check / root info
 app.get('/', (_req: Request, res: Response) => {
   res.json({
     service: 'Meta Lead Ads Real-Time Sync Gateway',
@@ -50,11 +49,9 @@ app.get('/', (_req: Request, res: Response) => {
   });
 });
 
-// Route Handlers
 app.use('/webhook', webhookRoutes);
 app.use('/api', apiRoutes);
 
-// 404 Route Handler
 app.use((_req: Request, res: Response) => {
   res.status(404).json({
     error: 'Not Found',
@@ -62,7 +59,6 @@ app.use((_req: Request, res: Response) => {
   });
 });
 
-// Global Error Handler
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('[Server Error]', err.stack || err.message);
   res.status(500).json({
@@ -71,23 +67,16 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
-// Start HTTP + WebSocket Server
 const PORT = config.port;
 server.listen(PORT, () => {
-  console.log(`\n======================================================`);
-  console.log(`🚀 Meta Lead Ads Real-Time Gateway Server`);
-  console.log(`📡 Server listening on: http://localhost:${PORT}`);
-  console.log(`🔗 Webhook Endpoint:    http://localhost:${PORT}/webhook`);
-  console.log(`⚡ WebSocket Server:    ws://localhost:${PORT}`);
-  console.log(`🧪 Test Simulation API: POST http://localhost:${PORT}/api/simulate-lead`);
-  console.log(`======================================================\n`);
+  console.log(`[Server] Running on http://localhost:${PORT}`);
+  console.log(`[Server] Webhook endpoint: http://localhost:${PORT}/webhook`);
 });
 
-// Graceful Shutdown Handlers
 const handleShutdown = (signal: string) => {
-  console.log(`\n[Server] 🛑 Received ${signal}. Shutting down gracefully...`);
+  console.log(`[Server] Received ${signal}, shutting down...`);
   server.close(() => {
-    console.log('[Server] 🔒 HTTP and WebSocket servers closed.');
+    console.log('[Server] HTTP and WebSocket connections closed.');
     process.exit(0);
   });
 };
