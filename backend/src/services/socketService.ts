@@ -17,7 +17,7 @@ class SocketService {
 
     this.io.on('connection', (socket: Socket) => {
       this.connectedClientsCount++;
-      console.log(`[Socket] 🟢 Client connected: ${socket.id} (Total: ${this.connectedClientsCount})`);
+      console.log(`[Socket] Client connected: ${socket.id} (total: ${this.connectedClientsCount})`);
 
       socket.emit('connection_status', {
         status: 'connected',
@@ -26,11 +26,10 @@ class SocketService {
         totalClients: this.connectedClientsCount,
       });
 
-      // Synchronize full persistent lead history to newly connected client
+      // Send existing leads to new client
       const existingLeads = storageService.getLeads();
       socket.emit('initial_leads', existingLeads);
 
-      // Send recent activity buffer
       const recentActivities = storageService.getActivities();
       if (recentActivities.length > 0) {
         socket.emit('activity_history', recentActivities);
@@ -42,11 +41,10 @@ class SocketService {
         metadata: { socketId: socket.id, totalClients: this.connectedClientsCount },
       });
 
-      // Listen for client status updates (e.g. sales rep marked as Contacted)
+      // Handle status updates from client
       socket.on('update_lead_status', (data: { leadId: string; status: LeadStatus; contactedAt?: string; responseTimeSeconds?: number }) => {
-        console.log(`[Socket] 🏷️ Lead ${data.leadId} status changed to "${data.status}"`);
+        console.log(`[Socket] Lead ${data.leadId} status changed to "${data.status}"`);
         
-        // Persist to disk
         storageService.updateLeadStatus(data.leadId, data.status, data.contactedAt, data.responseTimeSeconds);
 
         this.logActivity({
@@ -55,20 +53,19 @@ class SocketService {
           metadata: data,
         });
 
-        // Sync across all connected devices
         this.io?.emit('lead_status_updated', data);
       });
 
-      // Listen for notes updates
+      // Handle notes updates
       socket.on('update_lead_notes', (data: { leadId: string; notes: string }) => {
-        console.log(`[Socket] 📝 Lead ${data.leadId} notes updated`);
+        console.log(`[Socket] Lead ${data.leadId} notes updated`);
         storageService.updateLeadNotes(data.leadId, data.notes);
         this.io?.emit('lead_notes_updated', data);
       });
 
       socket.on('disconnect', (reason) => {
         this.connectedClientsCount = Math.max(0, this.connectedClientsCount - 1);
-        console.log(`[Socket] 🔴 Client disconnected: ${socket.id} (Reason: ${reason})`);
+        console.log(`[Socket] Client disconnected: ${socket.id} (${reason})`);
       });
     });
 
@@ -77,11 +74,11 @@ class SocketService {
 
   public broadcastNewLead(lead: FormattedLead): void {
     if (!this.io) {
-      console.warn('[Socket] ⚠️ Socket.io not initialized yet.');
+      console.warn('[Socket] Socket.io not initialized yet');
       return;
     }
 
-    console.log(`[Socket] 📡 Broadcasting new lead: "${lead.full_name}" (${lead.leadgen_id}) [Latency: ${lead.telemetry.pipeline_latency_ms}ms]`);
+    console.log(`[Socket] Broadcasting new lead: ${lead.full_name} (${lead.leadgen_id}) [${lead.telemetry.pipeline_latency_ms}ms]`);
     this.io.emit('new_lead', lead);
 
     this.logActivity({

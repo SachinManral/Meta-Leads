@@ -65,28 +65,24 @@ class MetaService {
     },
   ];
 
-  /**
-   * Verifies Webhook subscription handshake from Meta
-   */
+  // Verify webhook subscription handshake from Meta
   public verifyWebhookChallenge(mode: unknown, token: unknown, challenge: unknown): string | null {
     if (mode === 'subscribe' && token === config.meta.verifyToken) {
-      console.log('[MetaService] ✅ Webhook verified successfully with Meta challenge.');
+      console.log('[MetaService] Webhook verified with challenge token');
       socketService.logActivity({
         type: 'signature_verified',
         message: 'Meta Webhook verification challenge accepted (200 OK)',
       });
       return String(challenge);
     }
-    console.warn('[MetaService] ❌ Webhook verification failed. Token mismatch or invalid mode.');
+    console.warn('[MetaService] Webhook verification failed: token mismatch or invalid mode');
     return null;
   }
 
-  /**
-   * Validates Meta X-Hub-Signature-256 HMAC header
-   */
+  // Validate Meta X-Hub-Signature-256 HMAC header
   public verifySignature(payload: string, signatureHeader?: string): boolean {
     if (!config.meta.appSecret) {
-      // If no App Secret is configured (e.g. initial development), bypass check with a warning
+      // If no App Secret is configured in development, bypass check
       return true;
     }
 
@@ -112,16 +108,11 @@ class MetaService {
     }
   }
 
-  /**
-   * Checks if lead was already processed (Duplicate Protection)
-   */
   public isDuplicate(leadgenId: string): boolean {
     return storageService.isDuplicate(leadgenId);
   }
 
-  /**
-   * Fetches Lead details from Meta Graph API using leadgen_id
-   */
+  // Fetch lead details from Graph API using leadgen_id
   public async fetchLeadDetails(
     leadgenId: string,
     webhookStartTime: number = Date.now(),
@@ -139,7 +130,7 @@ class MetaService {
     });
 
     if (!pageToken) {
-      console.warn('[MetaService] ⚠️ META_PAGE_ACCESS_TOKEN is not set. Generating realistic mock lead.');
+      console.warn('[MetaService] META_PAGE_ACCESS_TOKEN is not set, generating mock lead');
       const graphFetchedAt = new Date().toISOString();
       const pipelineLatency = Math.max(12, Date.now() - webhookStartTime);
 
@@ -162,7 +153,7 @@ class MetaService {
 
     try {
       const url = `https://graph.facebook.com/${config.meta.graphApiVersion}/${leadgenId}?access_token=${pageToken}`;
-      console.log(`[MetaService] 🌐 Fetching lead from Graph API: ${url.replace(pageToken, '***TOKEN***')}`);
+      console.log(`[MetaService] Fetching lead from Graph API: ${url.replace(pageToken, '***TOKEN***')}`);
       
       const response = await axios.get<MetaLeadGraphResponse>(url);
       const graphFetchedAt = new Date().toISOString();
@@ -189,9 +180,9 @@ class MetaService {
       const axiosErr = error as AxiosError<{ error?: { message?: string } }>;
       const errorMsg = axiosErr.response?.data?.error?.message || axiosErr.message;
       if (leadgenId.startsWith('lead_') || leadgenId.startsWith('test_')) {
-        console.log(`[MetaService] 🧪 Simulation ID detected (${leadgenId}) — enriching with realistic field data`);
+        console.log(`[MetaService] Simulation ID (${leadgenId}), using mock lead data`);
       } else {
-        console.warn(`[MetaService] ⚠️ Meta Graph API notice (${errorMsg}) — using resilient fallback payload`);
+        console.warn(`[MetaService] Graph API error (${errorMsg}), using fallback data`);
       }
       
       const graphFetchedAt = new Date().toISOString();
