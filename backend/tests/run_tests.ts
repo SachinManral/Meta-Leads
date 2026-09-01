@@ -11,21 +11,18 @@ let failed = 0;
 function it(desc: string, fn: () => void) {
   try {
     fn();
-    console.log(`  ✅ PASS: ${desc}`);
+    console.log(`  PASS: ${desc}`);
     passed++;
   } catch (err: unknown) {
-    console.error(`  ❌ FAIL: ${desc}`);
+    console.error(`  FAIL: ${desc}`);
     console.error(`     ${(err as Error).message}`);
     failed++;
   }
 }
 
-console.log('\n======================================================');
-console.log('🧪 Running Production Meta Leads Test Suite');
-console.log('======================================================\n');
+console.log('\nRunning Meta Leads Test Suite...\n');
 
-// Group 1: Cryptographic HMAC Signature Verification
-console.log('📦 1. Cryptographic HMAC Verification');
+console.log('1. Cryptographic HMAC Verification');
 
 it('should verify valid HMAC-SHA256 signature when secret matches', () => {
   const secret = config.meta.appSecret || 'test_app_secret_123';
@@ -65,8 +62,7 @@ it('should reject invalid or missing signature header formats', () => {
   assert.strictEqual(metaService.verifySignature('body', 'sha256=short'), false);
 });
 
-// Group 2: Webhook Challenge Handshake Verification
-console.log('\n📦 2. Webhook Challenge Handshake Verification');
+console.log('\n2. Webhook Challenge Handshake Verification');
 
 it('should accept valid subscribe mode and matching token', () => {
   const challenge = 'random_challenge_string_9988';
@@ -79,8 +75,7 @@ it('should reject token mismatch or wrong mode', () => {
   assert.strictEqual(metaService.verifyWebhookChallenge('unsubscribe', config.meta.verifyToken, '123'), null);
 });
 
-// Group 3: Lead Normalization from Meta Graph API
-console.log('\n📦 3. Lead Normalization & Field Mapping');
+console.log('\n3. Lead Normalization & Field Mapping');
 
 it('should normalize Meta Graph API response with custom questions', () => {
   const mockGraphResponse: MetaLeadGraphResponse = {
@@ -120,8 +115,7 @@ it('should normalize Meta Graph API response with custom questions', () => {
   assert.strictEqual(normalized.telemetry.pipeline_latency_ms, 50);
 });
 
-// Group 4: Storage Service & Deduplication
-console.log('\n📦 4. Persistent Storage & Deduplication');
+console.log('\n4. Persistent Storage & Deduplication');
 
 it('should save lead, deduplicate, and support status and notes updates', () => {
   const testLeadId = `test_${Date.now()}`;
@@ -145,9 +139,7 @@ it('should save lead, deduplicate, and support status and notes updates', () => 
   assert.strictEqual(searchResults.length >= 1, true, 'Search should find the lead by name');
 });
 
-console.log('\n======================================================');
-console.log(`🏁 Test Results: ${passed} Passed, ${failed} Failed`);
-console.log('======================================================\n');
+console.log(`\nTest Results: ${passed} passed, ${failed} failed\n`);
 
 if (failed > 0) {
   process.exit(1);

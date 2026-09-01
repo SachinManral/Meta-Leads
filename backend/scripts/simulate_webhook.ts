@@ -95,34 +95,22 @@ async function runSimulation() {
 
   if (APP_SECRET) {
     headers['x-hub-signature-256'] = computeSignature(payloadString, APP_SECRET);
-    console.log(`🔐 Generated X-Hub-Signature-256 using configured META_APP_SECRET`);
-  } else {
-    console.log(`ℹ️ No META_APP_SECRET in .env — sending without HMAC header (Development Mode)`);
   }
 
-  console.log(`\n======================================================`);
-  console.log(`🚀 Triggering Simulated Meta Webhook Event`);
-  console.log(`🎯 Target URL: ${WEBHOOK_URL}`);
-  console.log(`📦 Leadgen ID: ${leadgenId}`);
-  console.log(`📄 Page ID:    ${pageId}`);
-  if (options.fullName) console.log(`👤 Custom Name: ${options.fullName}`);
-  console.log(`======================================================\n`);
+  console.log(`[Simulate] Sending webhook to ${WEBHOOK_URL} (leadgen_id: ${leadgenId})`);
 
   try {
     const startTime = Date.now();
     const response = await axios.post(WEBHOOK_URL, payload, { headers });
     const latency = Date.now() - startTime;
 
-    console.log(`✅ Webhook Accepted by Server! Status: ${response.status} (${response.statusText})`);
-    console.log(`⏱️ Latency: ${latency}ms`);
-    console.log(`📱 Check your React Native mobile app — the lead will have appeared live!\n`);
+    console.log(`[Simulate] Webhook delivered: status ${response.status} in ${latency}ms`);
   } catch (error: any) {
-    console.error(`❌ Webhook dispatch failed:`, error.response?.data || error.message);
+    console.error(`[Simulate] Webhook dispatch failed:`, error.response?.data || error.message);
     if (error.code === 'ECONNREFUSED') {
-      console.error(`\n💡 Tip: Is the backend server running? Start it with "npm run dev" in the backend directory.`);
+      console.error(`[Simulate] Backend server not reachable at ${WEBHOOK_URL}. Make sure it is running.`);
     }
   }
 }
 
-// Execute simulation
 runSimulation();
