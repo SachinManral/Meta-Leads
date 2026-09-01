@@ -26,7 +26,7 @@ export function useRealtimeLeads(customServerUrl?: string) {
     }
 
     setConnectionStatus('connecting');
-    console.log(`[SocketHook] 🔄 Connecting to WebSocket server: ${url}`);
+    console.log(`[SocketHook] Connecting to ${url}`);
 
     const socket = io(url, {
       transports: ['websocket', 'polling'],
@@ -36,37 +36,33 @@ export function useRealtimeLeads(customServerUrl?: string) {
     });
 
     socket.on('connect', () => {
-      console.log(`[SocketHook] 🟢 Connected to server (Socket ID: ${socket.id})`);
+      console.log(`[SocketHook] Connected (id: ${socket.id})`);
       setConnectionStatus('connected');
     });
 
     socket.on('disconnect', (reason) => {
-      console.log(`[SocketHook] 🔴 Disconnected from server: ${reason}`);
+      console.log(`[SocketHook] Disconnected: ${reason}`);
       setConnectionStatus('disconnected');
     });
 
     socket.on('connect_error', (error) => {
-      console.warn(`[SocketHook] ⚠️ Connection Error:`, error.message);
+      console.warn(`[SocketHook] Connection error:`, error.message);
       setConnectionStatus('disconnected');
     });
 
-    // Initial Leads Synchronization (Instant Persistent Hydration)
     socket.on('initial_leads', (initialLeads: Lead[]) => {
-      console.log(`[SocketHook] 📦 Received ${initialLeads.length} initial leads from server`);
+      console.log(`[SocketHook] Received ${initialLeads.length} initial leads`);
       setLeads(initialLeads);
     });
 
-    // Activity History Initial Sync
     socket.on('activity_history', (history: SystemActivityLog[]) => {
       setActivities(history);
     });
 
-    // Real-time Activity Stream
     socket.on('system_activity', (activity: SystemActivityLog) => {
       setActivities((prev) => [activity, ...prev.slice(0, 40)]);
     });
 
-    // Cross-Client Status Update Listener
     socket.on('lead_status_updated', (data: { leadId: string; status: LeadStatus; contactedAt?: string; responseTimeSeconds?: number }) => {
       setLeads((currentLeads) =>
         currentLeads.map((item) =>
@@ -82,7 +78,6 @@ export function useRealtimeLeads(customServerUrl?: string) {
       );
     });
 
-    // Cross-Client Notes Update Listener
     socket.on('lead_notes_updated', (data: { leadId: string; notes: string }) => {
       setLeads((currentLeads) =>
         currentLeads.map((item) =>
@@ -91,16 +86,14 @@ export function useRealtimeLeads(customServerUrl?: string) {
       );
     });
 
-    // Real-time Lead Event Listener
     socket.on('new_lead', (newLead: Lead) => {
-      console.log(`[SocketHook] ⚡ Received live lead:`, newLead.full_name);
+      console.log(`[SocketHook] Received lead:`, newLead.full_name);
 
-      // Tactile arrival vibration on physical device
       if (Platform.OS !== 'web') {
         try {
           Vibration.vibrate([0, 90, 40, 90]);
         } catch {
-          // Ignore vibration failures if permissions not granted
+          // Ignore vibration error if not supported
         }
       }
       
@@ -123,14 +116,12 @@ export function useRealtimeLeads(customServerUrl?: string) {
         return [leadWithFlags, ...filtered];
       });
 
-      // Clear the latest alert toast after 6 seconds
       const toastTimer = setTimeout(() => {
         setLatestLead((current) => (current?.id === leadWithFlags.id ? null : current));
         timersRef.current.delete(toastTimer);
       }, 6000);
       timersRef.current.add(toastTimer);
 
-      // Dismiss the delivery trace animation after 4 seconds
       const t1 = setTimeout(() => {
         setLeads((currentLeads) =>
           currentLeads.map((item) =>
@@ -141,7 +132,6 @@ export function useRealtimeLeads(customServerUrl?: string) {
       }, 4000);
       timersRef.current.add(t1);
 
-      // Dismiss the "isNew" glowing border after 15 seconds
       const t2 = setTimeout(() => {
         setLeads((currentLeads) =>
           currentLeads.map((item) =>
@@ -168,10 +158,6 @@ export function useRealtimeLeads(customServerUrl?: string) {
     };
   }, [serverUrl, connectSocket]);
 
-  /**
-   * Updates lead status (New -> Contacted -> Qualified -> Closed)
-   * Automatically calculates response speed in seconds
-   */
   const updateLeadStatus = useCallback((leadId: string, newStatus: LeadStatus) => {
     setLeads((prevLeads) => {
       return prevLeads.map((lead) => {
@@ -179,7 +165,6 @@ export function useRealtimeLeads(customServerUrl?: string) {
           let contactedAt = lead.contacted_at;
           let responseTimeSeconds = lead.response_time_seconds;
 
-          // If transitioning to contacted for the first time, compute response time
           if (newStatus === 'contacted' && !lead.contacted_at) {
             contactedAt = new Date().toISOString();
             const receivedTime = new Date(lead.received_at || lead.created_time).getTime();
@@ -194,7 +179,6 @@ export function useRealtimeLeads(customServerUrl?: string) {
             response_time_seconds: responseTimeSeconds,
           };
 
-          // Broadcast to socket server
           if (socketRef.current) {
             socketRef.current.emit('update_lead_status', {
               leadId,
@@ -211,9 +195,6 @@ export function useRealtimeLeads(customServerUrl?: string) {
     });
   }, []);
 
-  /**
-   * Updates lead notes / remarks and synchronizes to server
-   */
   const updateLeadNotes = useCallback((leadId: string, notes: string) => {
     setLeads((prevLeads) =>
       prevLeads.map((lead) => (lead.id === leadId ? { ...lead, notes } : lead))
@@ -223,17 +204,14 @@ export function useRealtimeLeads(customServerUrl?: string) {
       socketRef.current.emit('update_lead_notes', { leadId, notes });
     }
 
-    // Also persist via REST fallback
+    // Fallback sync via REST
     fetch(`${serverUrl}/api/leads/${leadId}/notes`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ notes }),
-    }).catch((err) => console.warn('[SocketHook] Note sync fallback notice:', err.message));
+    }).catch((err) => console.warn('[SocketHook] Note sync error:', err.message));
   }, [serverUrl]);
 
-  /**
-   * Pull-to-refresh lead list from backend REST API
-   */
   const refreshLeads = useCallback(async () => {
     try {
       setIsRefreshing(true);
@@ -245,7 +223,7 @@ export function useRealtimeLeads(customServerUrl?: string) {
         }
       }
     } catch (err: unknown) {
-      console.warn('[SocketHook] ⚠️ Refresh leads failed:', (err as Error).message);
+      console.warn('[SocketHook] Refresh leads failed:', (err as Error).message);
     } finally {
       setIsRefreshing(false);
     }
@@ -253,7 +231,7 @@ export function useRealtimeLeads(customServerUrl?: string) {
 
   const triggerMockLead = async () => {
     try {
-      console.log(`[SocketHook] 🧪 Requesting simulation from: ${serverUrl}/api/simulate-lead`);
+      console.log(`[SocketHook] Requesting simulation from: ${serverUrl}/api/simulate-lead`);
       const response = await fetch(`${serverUrl}/api/simulate-lead`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -262,7 +240,7 @@ export function useRealtimeLeads(customServerUrl?: string) {
       return await response.json();
     } catch (err: unknown) {
       const error = err as Error;
-      console.error('[SocketHook] ❌ Failed to simulate lead:', error.message);
+      console.error('[SocketHook] Simulation failed:', error.message);
       throw error;
     }
   };
@@ -273,7 +251,7 @@ export function useRealtimeLeads(customServerUrl?: string) {
     try {
       await fetch(`${serverUrl}/api/leads`, { method: 'DELETE' });
     } catch (err) {
-      console.warn('[SocketHook] Clear leads API notice:', err);
+      console.warn('[SocketHook] Clear leads error:', err);
     }
   }, [serverUrl]);
 
