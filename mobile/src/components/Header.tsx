@@ -84,7 +84,6 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Top Header Row: Brand & Mode Switcher */}
       <View style={styles.topRow}>
         <View style={styles.brandRow}>
           <View style={styles.metaIconBadge}>
@@ -92,7 +91,6 @@ export const Header: React.FC<HeaderProps> = ({
           </View>
           <View>
             <Text style={styles.appTitle}>Meta Leads Inbox</Text>
-            {/* Clean Apple-style live status row (NO colorful rectangular box) */}
             <TouchableOpacity
               style={styles.statusRow}
               onPress={onPressStatus}
@@ -127,7 +125,6 @@ export const Header: React.FC<HeaderProps> = ({
         </View>
       </View>
 
-      {/* Clean Stats & Operational Action Bar */}
       <View style={styles.statsBar}>
         <View style={styles.statsInline}>
           <Text style={styles.statCount}>{totalLeads}</Text>

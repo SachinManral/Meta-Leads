@@ -46,7 +46,6 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Search Input Box */}
       <View style={styles.searchBox}>
         <Feather name="search" size={15} color="#94A3B8" style={styles.searchIcon} />
         <TextInput
@@ -70,7 +69,6 @@ export const SearchFilterBar: React.FC<SearchFilterBarProps> = ({
         )}
       </View>
 
-      {/* Horizontal Status Filter Chips */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

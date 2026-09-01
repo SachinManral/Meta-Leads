@@ -12,7 +12,6 @@ interface EmptyStateProps {
 export const EmptyState: React.FC<EmptyStateProps> = ({ appMode, onSimulate }) => {
   return (
     <View style={styles.container}>
-      {/* Minimalist Apple-style Monochrome Icon (NO bright colored circles) */}
       <View style={styles.iconCircle}>
         <Feather name="inbox" size={28} color="#64748B" />
       </View>
@@ -22,7 +21,6 @@ export const EmptyState: React.FC<EmptyStateProps> = ({ appMode, onSimulate }) =
         Submissions from Meta Lead Ads forms will appear here in real time via WebSockets with zero manual refresh.
       </Text>
 
-      {/* Clean Minimalist Protocol Card (Neutral, no colored blocks) */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Feather name="check-circle" size={14} color="#64748B" />
@@ -67,7 +65,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#F1F5F9', // Clean neutral gray circle
+    backgroundColor: '#F1F5F9',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
