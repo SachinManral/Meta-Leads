@@ -55,11 +55,11 @@ This document details the architectural decisions, token permission requirements
 
 ---
 
-### 5. Meta Lead Ads Testing Tool vs. Production Leadgen Events
+### 5. Meta Lead Ads Testing Tool vs. Live Ad Leadgen Events
 
 1. **Lead Ads Testing Tool (`/tools/lead-ads-testing`):**
    - Built specifically for Enterprise Business Portfolio CRM integrations (e.g. Salesforce, HubSpot). When "Lead Access Manager" is active on a Page, Meta's testing UI blocks simulation unless the App is formally assigned in Meta Business Suite.
-2. **Production Ad Webhooks & Developer Dashboard Test:**
+2. **Live Ad Webhooks & Developer Dashboard Test:**
    - Real Facebook/Instagram ad submissions from customers and the Developer App Webhooks Dashboard (`/apps/{id}/use_cases/customize/...`) bypass Business Suite CRM marketplace constraints and fire authentic HMAC-signed `leadgen` payloads directly to the gateway.
 3. **Sample Leadgen ID `444444444444` Handling:**
    - Meta's Webhooks Dashboard sends dummy ID `444444444444`, which does not exist in Graph API. The gateway catches the 400 error and dynamically enriches the event with realistic customer profiles (*Vikram Singh, Priya Sharma, Sneha Kulkarni, Rohan Mehta, Aarav Patel*).
@@ -107,9 +107,9 @@ This document details the architectural decisions, token permission requirements
 
 ---
 
-### 9. Evolution from PoC to Enterprise Production
+### 9. Evolution from PoC to Large-Scale Deployment
 
-| Dimension | Current Production-Grade PoC | Enterprise Production Scale |
+| Dimension | Current PoC Implementation | Scale-Out Architecture |
 | :--- | :--- | :--- |
 | **Persistence** | Atomic file-backed JSON repository with temp-swap. | Managed distributed database (PostgreSQL with Prisma / MongoDB) with read-replicas. |
 | **Message Queue** | In-process Express gateway with direct Socket.IO broadcast. | Distributed message broker (Redis Pub/Sub, RabbitMQ, or Apache Kafka) for multi-worker horizontal scaling. |

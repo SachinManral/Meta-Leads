@@ -7,7 +7,7 @@
 [![Socket.IO](https://img.shields.io/badge/Socket.IO-v4-010101?style=flat&logo=socketdotio&logoColor=white)](https://socket.io/)
 [![Meta Graph API](https://img.shields.io/badge/Meta%20Graph%20API-v19.0-0668E1?style=flat&logo=meta&logoColor=white)](https://developers.facebook.com/)
 
-> **A high-performance, production-grade lead ingestion and live synchronization pipeline connecting Meta (Facebook & Instagram) Lead Ads directly into an open React Native mobile screen with sub-100ms latency and zero user touch.**
+> **A high-performance lead ingestion and live synchronization pipeline connecting Meta (Facebook & Instagram) Lead Ads directly into an open React Native mobile screen with sub-100ms latency and real-time updates.**
 
 ---
 

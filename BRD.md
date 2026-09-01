@@ -15,7 +15,7 @@ This Proof-of-Concept (PoC) delivers a **zero-touch, real-time lead capture pipe
 - **Instant Lead Engagement:** Inbound leads appear live on sales representatives' devices the millisecond a prospect taps "Submit" on a Facebook or Instagram ad form.
 - **Frictionless Sales Operations:** Eliminates manual pull-to-refresh, periodic batch exports, or delayed email notifications.
 - **Speed-to-Lead Response Tracking:** Automatically timestamps and calculates sales representative response time in seconds upon first contact.
-- **Enterprise-Grade Security:** Authenticates all incoming webhook traffic cryptographically using HMAC-SHA256 signatures before processing.
+- **Cryptographic Security:** Authenticates all incoming webhook traffic cryptographically using HMAC-SHA256 signatures before processing.
 - **High-Availability Resiliency:** Employs duplicate prevention and automated failover enrichment to prevent data loss during transient Meta API rate limits or network blips.
 
 ---
@@ -52,7 +52,7 @@ This Proof-of-Concept (PoC) delivers a **zero-touch, real-time lead capture pipe
 | Deliverable | Description | Success Metric |
 | :--- | :--- | :--- |
 | **Live Working PoC** | Complete full-stack solution running locally with zero manual interaction needed on mobile. | Lead lands on mobile screen in $< 100\text{ms}$. |
-| **Clean Git Repository** | Production-quality, strictly typed TypeScript codebase with zero lint/compile errors. | 100% build pass, secrets protected in `.gitignore`. |
+| **Clean Git Repository** | Strictly typed TypeScript codebase with zero lint/compile errors. | 100% build pass, secrets protected in `.gitignore`. |
 | **Loom Video Demonstrations** | 1. Live Product Demo (< 5 min)<br>2. Architecture & Code Walkthrough (5–7 min). | Clear demonstration of zero-touch sync and deep technical walkthrough. |
 | **Technical Documentation** | Comprehensive README, PRD, BRD, and Assumptions documents. | Complete reproducibility and architectural clarity. |
 
@@ -62,4 +62,4 @@ This Proof-of-Concept (PoC) delivers a **zero-touch, real-time lead capture pipe
 
 - **Latency SLA:** Sub-100ms end-to-end pipeline latency from webhook arrival to mobile UI dispatch.
 - **Availability & Reconnection:** Automatic exponential-backoff socket reconnection with active visual status indicators (`● LIVE`).
-- **UI Aesthetics & UX:** Minimalist Apple/Linear-grade design with crisp `@expo/vector-icons`, high-contrast typography, and fluid spring micro-animations.
+- **UI Aesthetics & UX:** Minimalist design with crisp `@expo/vector-icons`, clean typography, and fluid spring micro-animations.
