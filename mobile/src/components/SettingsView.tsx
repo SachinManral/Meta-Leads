@@ -25,7 +25,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 }) => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Settings</Text>
@@ -38,7 +37,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Server & Network Gateway Card */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Feather name="server" size={15} color="#0F172A" />
@@ -84,7 +82,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Meta API & Cryptography Card */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Ionicons name="logo-facebook" size={16} color="#1877F2" />
@@ -110,7 +107,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </View>
       </View>
 
-      {/* Build & Compliance Card */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <Feather name="shield" size={15} color="#0F172A" />
@@ -129,7 +125,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
         <View style={styles.row}>
           <Text style={styles.rowLabel}>Version</Text>
-          <Text style={styles.rowValue}>1.0.0 (Production Candidate)</Text>
+          <Text style={styles.rowValue}>1.0.0</Text>
         </View>
       </View>
     </ScrollView>

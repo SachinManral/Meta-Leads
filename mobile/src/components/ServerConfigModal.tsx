@@ -54,7 +54,6 @@ export const ServerConfigModal: React.FC<ServerConfigModalProps> = ({
       >
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* Modal Title */}
             <View style={styles.header}>
               <View>
                 <Text style={styles.title}>Backend Connection Setup</Text>
@@ -65,7 +64,6 @@ export const ServerConfigModal: React.FC<ServerConfigModalProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* Input Field */}
             <View style={styles.body}>
               <Text style={styles.inputLabel}>Server Base URL</Text>
               <TextInput
@@ -79,7 +77,6 @@ export const ServerConfigModal: React.FC<ServerConfigModalProps> = ({
                 keyboardType="url"
               />
 
-              {/* Quick Preset Buttons */}
               <Text style={styles.presetsLabel}>Quick Presets:</Text>
               <View style={styles.presetGroup}>
                 {presets.map((preset) => (
@@ -114,7 +111,6 @@ export const ServerConfigModal: React.FC<ServerConfigModalProps> = ({
               </View>
             </View>
 
-            {/* Footer Buttons */}
             <View style={styles.footer}>
               <TouchableOpacity style={styles.cancelBtn} onPress={onClose}>
                 <Text style={styles.cancelBtnText}>Cancel</Text>

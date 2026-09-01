@@ -41,7 +41,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-      {/* Top Navigation Bar */}
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Analytics</Text>
@@ -54,7 +53,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Clean iOS Filter Pill Bar */}
       <View style={styles.filterRow}>
         {(['today', 'week', 'all'] as const).map((t) => (
           <TouchableOpacity
@@ -70,7 +68,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         ))}
       </View>
 
-      {/* Production 2x2 Key Metric Cards */}
       <View style={styles.metricGrid}>
         <View style={styles.metricCard}>
           <Text style={styles.metricLabel}>TOTAL LEADS</Text>
@@ -107,7 +104,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </View>
       </View>
 
-      {/* Pipeline Status Breakdown Card */}
       <View style={styles.sectionCard}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Pipeline Stage Distribution</Text>
@@ -167,7 +163,6 @@ export const AnalyticsView: React.FC<AnalyticsViewProps> = ({
         </View>
       </View>
 
-      {/* Channel Ingestion Health Card */}
       <View style={styles.sectionCard}>
         <Text style={styles.sectionTitle}>Campaign Channels & Ingestion</Text>
 

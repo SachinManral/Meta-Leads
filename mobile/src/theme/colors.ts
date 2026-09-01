@@ -1,29 +1,29 @@
 export const colors = {
-  background: '#F8FAFC',       // Clean modern slate background
-  surface: '#FFFFFF',          // Pure crisp white card background
-  surfaceSecondary: '#F1F5F9', // Subtle secondary container
-  border: '#E2E8F0',           // Crisp divider border
-  borderLight: '#F1F5F9',      // Very subtle card border
+  background: '#F8FAFC',
+  surface: '#FFFFFF',
+  surfaceSecondary: '#F1F5F9',
+  border: '#E2E8F0',
+  borderLight: '#F1F5F9',
   
   // Typography
-  textPrimary: '#0F172A',      // Slate-900 high contrast primary text
-  textSecondary: '#64748B',    // Slate-500 muted secondary text
-  textTertiary: '#94A3B8',     // Slate-400 placeholder text
+  textPrimary: '#0F172A',
+  textSecondary: '#64748B',
+  textTertiary: '#94A3B8',
   
   // Status & Brand
-  primary: '#2563EB',          // Royal Blue
-  primaryLight: '#EFF6FF',     // Soft Blue pill background
+  primary: '#2563EB',
+  primaryLight: '#EFF6FF',
   
-  success: '#10B981',          // Emerald Green for Live status & new badge
-  successLight: '#ECFDF5',     // Soft emerald tint
+  success: '#10B981',
+  successLight: '#ECFDF5',
   
-  warning: '#F59E0B',          // Amber for reconnecting
+  warning: '#F59E0B',
   warningLight: '#FFFBEB',
   
-  danger: '#EF4444',           // Coral Red for disconnected
+  danger: '#EF4444',
   dangerLight: '#FEF2F2',
 
-  metaBlue: '#1877F2',         // Meta Brand Blue
+  metaBlue: '#1877F2',
   metaBlueLight: '#EBF5FF',
 };
 

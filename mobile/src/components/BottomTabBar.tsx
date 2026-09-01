@@ -116,7 +116,6 @@ const TabItem: React.FC<TabItemProps> = ({ icon, isActive, badge, onPress }) => 
           color={isActive ? '#0F172A' : 'rgba(255, 255, 255, 0.7)'}
         />
 
-        {/* Live Badge Dot for Inbound Leads */}
         {!isActive && badge !== undefined && badge > 0 && (
           <View style={styles.badgeDot} />
         )}
@@ -143,7 +142,6 @@ const styles = StyleSheet.create({
     maxWidth: 390,
     height: 68,
     borderRadius: 34,
-    // Transparent Frosted Glass effect
     backgroundColor: Platform.select({
       ios: 'rgba(15, 23, 42, 0.75)',
       android: 'rgba(15, 23, 42, 0.82)',
@@ -187,7 +185,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#FFFFFF', // High-contrast White circular highlight
+    backgroundColor: '#FFFFFF',
     ...Platform.select({
       ios: {
         shadowColor: '#000000',

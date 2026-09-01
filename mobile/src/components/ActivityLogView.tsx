@@ -92,7 +92,6 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <View>
           <Text style={styles.title}>Activity Stream</Text>
@@ -105,7 +104,6 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Filter Chips */}
       <View style={styles.filterRow}>
         <TouchableOpacity
           style={[styles.filterChip, filter === 'all' && styles.filterChipActive]}
@@ -138,7 +136,6 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Modern Event Timeline Feed (NOT a terminal) */}
       <ScrollView
         style={styles.timelineScroll}
         contentContainerStyle={styles.timelineContent}
@@ -161,7 +158,6 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({
 
             return (
               <View key={act.id} style={styles.eventRow}>
-                {/* Left Timeline Indicator */}
                 <View style={styles.timelineCol}>
                   <View style={[styles.iconCircle, { backgroundColor: details.bgColor }]}>
                     <Ionicons name={details.icon} size={15} color={details.iconColor} />
@@ -169,7 +165,6 @@ export const ActivityLogView: React.FC<ActivityLogViewProps> = ({
                   {!isLast && <View style={styles.timelineLine} />}
                 </View>
 
-                {/* Event Card */}
                 <View style={styles.eventCard}>
                   <View style={styles.cardTopRow}>
                     <Text style={styles.eventTitle}>{details.title}</Text>
